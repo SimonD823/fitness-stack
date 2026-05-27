@@ -1,0 +1,44 @@
+# ============================================================
+# Local AI Fitness Stack — .gitignore
+# ============================================================
+
+# Secrets — never commit these
+.env
+*.env
+garmin_tokens.json
+tokens/
+caliber_tokens.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# InfluxDB backups (too large for git)
+backup/
+
+# Generated files
+fitness_context.txt
+caliber_workouts.json

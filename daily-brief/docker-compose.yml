@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  daily-brief:
+    image: python:3.12-slim
+    container_name: daily-brief
+    restart: unless-stopped
+    environment:
+      INFLUX_HOST: "${NAS_HOST}"
+      INFLUX_PORT: "${INFLUX_PORT}"
+      INFLUX_USER: "${INFLUX_USER}"
+      INFLUX_PASS: "${INFLUX_PASS}"
+      LM_STUDIO_URL: "http://${MAX_HOST}:1234"
+      LM_MODEL: "${LM_MODEL}"
+      BREVO_API_KEY: "${BREVO_API_KEY}"
+      EMAIL_FROM: "${EMAIL_FROM}"
+      EMAIL_FROM_NAME: "${EMAIL_FROM_NAME}"
+      EMAIL_TO: "${EMAIL_TO}"
+      SEND_HOUR: "${SEND_HOUR}"
+      SEND_MINUTE: "${SEND_MINUTE}"
+      RUN_NOW: "${RUN_NOW}"
+    volumes:
+      - /share/Container/daily-brief/daily_brief.py:/app/daily_brief.py
+      - /share/Container/daily-brief/TRAINING_PLAN_V2.md:/app/TRAINING_PLAN_V2.md
+    network_mode: host
+    command: >
+      bash -c "pip install --no-cache-dir requests influxdb --quiet &&
+               python /app/daily_brief.py"
