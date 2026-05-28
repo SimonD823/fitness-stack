@@ -15,7 +15,7 @@ A fully self-hosted fitness intelligence platform that combines your wearable da
 │                          Your Network                               │
 │                                                                     │
 │   ┌──────────────────────────────────┐   ┌─────────────────────┐  │
-│   │      NAS (NAS_IP)          │   │  Max (MAX_IP) │  │
+│   │      NAS (192.168.1.60)          │   │  Max (192.168.1.50) │  │
 │   │      QNAP TS873A                 │   │  MS-S1 Max          │  │
 │   │                                  │   │                     │  │
 │   │  InfluxDB :8086                  │◄──│  LM Studio :1234    │  │
@@ -54,11 +54,11 @@ Every 30 minutes:
     ├── Queries yesterday's sleep, HRV, steps, activities, strength sets, nutrition
     ├── Loads current week's treadmill session from TREADMILL_TRAINING_GUIDE.md
     ├── Adapts session based on recovery data (HRV + sleep + body battery)
-    ├──► Qwen3.6-27B API (MAX_IP:1234)
+    ├──► Qwen3.6-27B API (192.168.1.50:1234)
     │      AI generates: READINESS | TODAY'S PLAN | KEY FOCUS
     │      Includes planned vs actual strength comparison (March 2026 Caliber plan)
     │
-    └──► HTML email via Brevo API → your_email@example.com
+    └──► HTML email via Brevo API → simon_davies@hotmail.com
 ```
 
 ---
@@ -67,8 +67,8 @@ Every 30 minutes:
 
 | Device | Role | IP |
 |--------|------|-----|
-| QNAP TS873A (NAS) | InfluxDB, Grafana, all containers | NAS_IP |
-| Minisforum MS-S1 Max (Max) | LM Studio + Qwen3.6-27B inference server | MAX_IP |
+| QNAP TS873A (NAS) | InfluxDB, Grafana, all containers | 192.168.1.60 |
+| Minisforum MS-S1 Max (Max) | LM Studio + Qwen3.6-27B inference server | 192.168.1.50 |
 
 **Max's AI specs:** 128 GB UMA RAM, Radeon 8060S iGPU. Qwen3.6-27B at Q6_K (~22.5 GB VRAM) runs entirely on-GPU.
 
@@ -119,7 +119,7 @@ The AI coaching brief compares actual StrengthSets data against the embedded Mar
 | `04-lmstudio-qwen.md` | LM Studio on Max: model download, API server, thinking mode |
 | `05-ai-fitness-assistant.md` | System prompt, manual data queries, coaching prompts |
 | `06-100k-steps-challenge.md` | 14-week training + nutrition plan for 29 Aug challenge |
-| `07-daily-brief-guide.md` | Automated daily coaching email via Brevo API |
+| `07-coaching-emails-guide.md` | Automated daily coaching email via Brevo API |
 | `08-gap-analysis.md` | Remaining gaps and enhancement opportunities |
 | `Caliber_MCP_Integration_Guide.md` | Caliber MCP OAuth status + test procedures |
 | `TREADMILL_TRAINING_GUIDE.md` | Week-by-week NordicTrack T5 session protocols |
@@ -136,7 +136,8 @@ The AI coaching brief compares actual StrengthSets data against the embedded Mar
 |------|-----|-------------|
 | Every 30 minutes | garmin-direct-sync (NAS container) | Garmin Connect → GarminStats including strength sets with correct exercise names |
 | 06:00 AM daily | cronometer-sync (NAS container) | Cronometer nutrition → CronometerStats |
-| 06:45 AM daily | daily-brief (NAS container) | Queries InfluxDB + calls Qwen3.6 → sends HTML coaching email |
+| 06:45 AM daily | daily-brief (NAS container) | Queries InfluxDB + calls Qwen3.6 → sends HTML daily coaching email |
+| Monday 02:00 AM | daily-brief (NAS container) | Queries 7-day data → sends HTML weekly training report |
 
 ---
 

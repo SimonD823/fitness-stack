@@ -43,7 +43,7 @@ Open **File Station** → `Container`. Create:
 Container / daily-brief
 ```
 
-Copy `daily_brief.py` into `Container / daily-brief /` via Windows Explorer (`\\NAS_IP\Container\daily-brief`).
+Copy `daily_brief.py` into `Container / daily-brief /` via Windows Explorer (`\\192.168.1.60\Container\daily-brief`).
 
 ---
 
@@ -60,15 +60,15 @@ services:
     container_name: daily-brief
     restart: unless-stopped
     environment:
-      INFLUX_HOST: "NAS_IP"
+      INFLUX_HOST: "192.168.1.60"
       INFLUX_PORT: "8086"
       INFLUX_USER: "influxdb_user"
-      INFLUX_PASS: "YOUR_INFLUX_PASSWORD"
-      LM_STUDIO_URL: "http://MAX_IP:1234"
+      INFLUX_PASS: "influxdb_secret_password"
+      LM_STUDIO_URL: "http://192.168.1.50:1234"
       LM_MODEL: "qwen/qwen3.6-27b"
-      EMAIL_FROM: "your_email@example.com"
+      EMAIL_FROM: "simon_davies@hotmail.com"
       EMAIL_PASS: "YOUR_APP_PASSWORD_HERE"
-      EMAIL_TO: "your_email@example.com"
+      EMAIL_TO: "simon_davies@hotmail.com"
       SEND_HOUR: "6"
       SEND_MINUTE: "45"
       TRAINING_WEEK: "1"
@@ -151,3 +151,27 @@ Each Monday morning, edit the compose YAML in File Station and increment `TRAINI
 
 **TRAINING_WEEK is wrong:**
 - Edit the compose YAML in File Station → change the number → restart the container
+
+---
+
+## Weekly Training Report
+
+The `daily-brief` container also sends a weekly training report automatically every **Monday at 02:00 AM**. No additional setup is needed — it uses the same container, Brevo API key, and email address as the daily brief.
+
+### What the weekly report includes
+
+- **3 summary cards** — Training compliance %, total steps, weight change (colour coded)
+- **AI narrative** — 7 sections: Week Summary, Highlights, Areas to Address, Strength Report, Weight & Nutrition, Compliance, Coming Week
+- **Activity & Compliance table** — this week vs last week comparison
+- **Sleep & Recovery table** — average HRV, sleep score, resting HR
+- **Weight Trend** — start weight, end weight, change vs -0.8 to -1.0 kg/week target
+- **Nutrition vs Targets** — average daily calories, protein, carbs, fat vs targets with red flag for low protein days
+- **Strength Progression** — max weight per exercise with PR badges when a new record is set
+
+### Testing the weekly report
+
+To trigger the weekly report immediately, add `RUN_WEEKLY_NOW: "true"` to the compose YAML and recreate the container. Set back to `"false"` after testing.
+
+### Comparison period
+
+The weekly report compares the previous Monday-Sunday week against the week before that. It runs at 02:00 AM Monday so it captures the full previous week's data.
