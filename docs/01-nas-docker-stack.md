@@ -174,6 +174,7 @@ services:
     volumes:
       - /share/Container/fitness-stack/grafana-data:/var/lib/grafana
       - /share/Container/fitness-stack/grafana-provisioning:/etc/grafana/provisioning
+      - /share/Container/fitness-stack/grafana-dashboards:/var/lib/grafana/dashboards
     networks:
       - fitness-net
 
