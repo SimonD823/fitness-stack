@@ -69,8 +69,8 @@ services:
       EMAIL_FROM: "simon_davies@hotmail.com"
       EMAIL_PASS: "YOUR_APP_PASSWORD_HERE"
       EMAIL_TO: "simon_davies@hotmail.com"
-      SEND_HOUR: "6"
-      SEND_MINUTE: "45"
+      SEND_HOUR: "7"
+      SEND_MINUTE: "00"
       TRAINING_WEEK: "1"
       RUN_NOW: "false"
     volumes:
@@ -156,7 +156,7 @@ Each Monday morning, edit the compose YAML in File Station and increment `TRAINI
 
 ## Weekly Training Report
 
-The `daily-brief` container also sends a weekly training report automatically every **Monday at 02:00 AM**. No additional setup is needed — it uses the same container, Brevo API key, and email address as the daily brief.
+The `daily-brief` container also sends a weekly training report automatically every **Monday at 10:00 AM**. No additional setup is needed — it uses the same container, Brevo API key, and email address as the daily brief.
 
 ### What the weekly report includes
 
