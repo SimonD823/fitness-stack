@@ -93,7 +93,7 @@ python garmin_auth.py
 | `influxdb` | Always on | Garmin Connect and Cronometer → InfluxDB (GarminStats\CronometerStats) |
 | `garmin-direct-sync` | Every 30 min | Garmin Connect → InfluxDB (GarminStats) |
 | `cronometer-sync` | 06:00 AM daily | Cronometer → InfluxDB (CronometerStats) |
-| `daily-brief` | 06:45 AM daily | Queries InfluxDB → AI coaching → email |
+| `daily-brief` | 07:00 AM daily | Queries InfluxDB → AI coaching → email |
 | `open-webui` | Always on | Chat UI connecting to LM Studio on Max |
 
 ---
