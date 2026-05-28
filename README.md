@@ -18,7 +18,7 @@ Remote (iPhone/iPad)
                   ├── Grafana :3000       ← dashboards
                   ├── garmin-direct-sync  ← Garmin Connect → InfluxDB (every 30 min)
                   ├── cronometer-sync     ← nutrition → InfluxDB (06:00 AM daily)
-                  ├── daily-brief         ← AI coaching email (06:45 AM daily)
+                  ├── daily-brief         ← AI coaching emails (06:45 AM daily and weekly Monday 2AM)
                   └── open-webui :3001    ← chat UI → Max LM Studio
                                                   │
                                           Max (on demand)
@@ -89,6 +89,8 @@ python garmin_auth.py
 
 | Container | Schedule | Purpose |
 |-----------|----------|---------|
+| `grafana` | Every 30 min | Presents data from InfluxDB (GarminStats\CronometerStats) |
+| `influxdb` | Always on | Garmin Connect and Cronometer → InfluxDB (GarminStats\CronometerStats) |
 | `garmin-direct-sync` | Every 30 min | Garmin Connect → InfluxDB (GarminStats) |
 | `cronometer-sync` | 06:00 AM daily | Cronometer → InfluxDB (CronometerStats) |
 | `daily-brief` | 06:45 AM daily | Queries InfluxDB → AI coaching → email |
