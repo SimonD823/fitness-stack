@@ -21,18 +21,18 @@ from influxdb import InfluxDBClient
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-INFLUX_HOST  = os.environ.get("INFLUX_HOST", "NAS_IP")
+INFLUX_HOST  = os.environ.get("INFLUX_HOST", "192.168.1.60")
 INFLUX_PORT  = int(os.environ.get("INFLUX_PORT", "8086"))
 INFLUX_USER  = os.environ.get("INFLUX_USER", "influxdb_user")
-INFLUX_PASS  = os.environ.get("INFLUX_PASS", "YOUR_INFLUX_PASSWORD")
+INFLUX_PASS  = os.environ.get("INFLUX_PASS", "influxdb_secret_password")
 
-LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://MAX_IP:1234")
+LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://192.168.1.50:1234")
 LM_MODEL      = os.environ.get("LM_MODEL", "qwen/qwen3.6-27b")
 
 BREVO_API_KEY   = os.environ.get("BREVO_API_KEY", "")
-EMAIL_FROM      = os.environ.get("EMAIL_FROM", "your_smtp_login@smtp-brevo.com")
+EMAIL_FROM      = os.environ.get("EMAIL_FROM", "ac7cb9001@smtp-brevo.com")
 EMAIL_FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "AI Fitness Coach")
-EMAIL_TO        = os.environ.get("EMAIL_TO", "your_email@example.com")
+EMAIL_TO        = os.environ.get("EMAIL_TO", "simon_davies@hotmail.com")
 
 SEND_HOUR     = int(os.environ.get("SEND_HOUR", "6"))
 SEND_MINUTE   = int(os.environ.get("SEND_MINUTE", "45"))
@@ -150,14 +150,20 @@ def get_yesterday_metrics():
 
     metrics = {}
 
+    # Use 07:00 UTC window — a "training day" runs morning to morning
+    # This ensures last night's sleep, HRV, and evening activities all
+    # belong to the same reporting day rather than being split at midnight
+    window_start = f"{yesterday}T07:00:00Z"
+    window_end   = f"{today}T07:00:00Z"
+
     # Daily stats
     rows = query_influx("GarminStats",
         f"SELECT totalSteps, totalDistanceMeters, restingHeartRate, "
         f"activeKilocalories, bodyBatteryHighestValue, bodyBatteryLowestValue, "
         f"highStressDuration, lowStressDuration, moderateIntensityMinutes, "
         f"vigorousIntensityMinutes "
-        f"FROM DailyStats WHERE time >= '{yesterday}T22:00:00Z' "
-        f"AND time < '{today}T22:00:00Z' ORDER BY time DESC LIMIT 1"
+        f"FROM DailyStats WHERE time >= '{window_start}' "
+        f"AND time < '{window_end}' ORDER BY time DESC LIMIT 1"
     )
     if rows:
         r = rows[0]
@@ -173,14 +179,14 @@ def get_yesterday_metrics():
         metrics["vigorous_intensity"]  = r.get("vigorousIntensityMinutes", 0)
 
     # Sleep
-    # Sleep starts ~21:00-22:00 UTC so query from 2 days ago noon to catch it
-    # Filter out zero-value records (blank midnight writes) with sleepTimeSeconds > 3600
-    two_days_ago = (datetime.date.today() - datetime.timedelta(days=2)).isoformat()
+    # Sleep query: 07:00 UTC window captures last night's sleep
+    # Sleep starts ~21:00-22:00 UTC yesterday, well within the window
+    # Filter out zero-value records with sleepTimeSeconds > 3600
     rows = query_influx("GarminStats",
         f"SELECT sleepTimeSeconds, deepSleepSeconds, remSleepSeconds, "
         f"sleepScore, avgOvernightHrv, restingHeartRate, bodyBatteryChange "
-        f"FROM SleepSummary WHERE time >= '{two_days_ago}T12:00:00Z' "
-        f"AND time < '{today}T12:00:00Z' AND sleepTimeSeconds > 3600 "
+        f"FROM SleepSummary WHERE time >= '{window_start}' "
+        f"AND time < '{window_end}' AND sleepTimeSeconds > 3600 "
         f"ORDER BY time DESC LIMIT 1"
     )
     if rows:
@@ -193,20 +199,24 @@ def get_yesterday_metrics():
         metrics["sleep_rhr"]        = r.get("restingHeartRate", 0)
         metrics["battery_change"]   = r.get("bodyBatteryChange", 0)
 
-    # Weight (most recent)
+    # Weight (most recent within window)
     rows = query_influx("GarminStats",
-        "SELECT last(weight) FROM BodyComposition"
+        f"SELECT last(weight) FROM BodyComposition "
+        f"WHERE time >= '{window_start}' AND time < '{window_end}'"
     )
+    if not rows:
+        # Fall back to most recent ever if none in window
+        rows = query_influx("GarminStats", "SELECT last(weight) FROM BodyComposition")
     if rows:
         w = rows[0].get("last", 0)
         metrics["weight_kg"] = round((w / 1000) if w > 1000 else w, 2)
 
-    # Activities yesterday
+    # Activities in window
     rows = query_influx("GarminStats",
         f"SELECT activityName, activityType, calories, averageHR, "
         f"elapsedDuration, activityTrainingLoad "
-        f"FROM ActivitySummary WHERE time >= '{yesterday}T00:00:00Z' "
-        f"AND time < '{today}T00:00:00Z' ORDER BY time ASC"
+        f"FROM ActivitySummary WHERE time >= '{window_start}' "
+        f"AND time < '{window_end}' ORDER BY time ASC"
     )
     activities = []
     for r in rows:
@@ -222,11 +232,11 @@ def get_yesterday_metrics():
         })
     metrics["activities"] = activities
 
-    # Strength sets yesterday
+    # Strength sets in window
     rows = query_influx("GarminStats",
         f"SELECT exercise, reps, weight_kg, volume_kg "
-        f"FROM StrengthSets WHERE time >= '{yesterday}T00:00:00Z' "
-        f"AND time < '{today}T00:00:00Z' ORDER BY time ASC"
+        f"FROM StrengthSets WHERE time >= '{window_start}' "
+        f"AND time < '{window_end}' ORDER BY time ASC"
     )
     strength = {}
     for r in rows:
@@ -239,11 +249,11 @@ def get_yesterday_metrics():
         strength[ex]["volume"]     += float(r.get("volume_kg") or 0)
     metrics["strength"] = strength
 
-    # Caliber workouts yesterday
+    # Caliber workouts in window
     rows = query_influx("CaliberStats",
         f"SELECT workoutTitle, durationSeconds, totalSets, totalVolumeKg, exerciseCount "
-        f"FROM CaliberWorkout WHERE time >= '{yesterday}T00:00:00Z' "
-        f"AND time < '{today}T00:00:00Z' ORDER BY time ASC"
+        f"FROM CaliberWorkout WHERE time >= '{window_start}' "
+        f"AND time < '{window_end}' ORDER BY time ASC"
     )
     caliber_sessions = []
     for r in rows:
@@ -256,11 +266,11 @@ def get_yesterday_metrics():
         })
     metrics["caliber_sessions"] = caliber_sessions
 
-    # Caliber set detail yesterday
+    # Caliber set detail in window
     rows = query_influx("CaliberStats",
         f"SELECT exercise, reps, weight_kg, volume_kg "
-        f"FROM CaliberSets WHERE time >= '{yesterday}T00:00:00Z' "
-        f"AND time < '{today}T00:00:00Z' ORDER BY time ASC"
+        f"FROM CaliberSets WHERE time >= '{window_start}' "
+        f"AND time < '{window_end}' ORDER BY time ASC"
     )
     caliber_sets = {}
     for r in rows:
@@ -273,7 +283,7 @@ def get_yesterday_metrics():
         caliber_sets[ex]["volume"]     += float(r.get("volume_kg") or 0)
     metrics["caliber_sets"] = caliber_sets
 
-    # Nutrition yesterday
+    # Nutrition: keeps 00:00 UTC boundary since Cronometer timestamps at midnight
     rows = query_influx("CronometerStats",
         f"SELECT Energy_kcal, Protein_g, Fat_g, Carbs_g, Net_Carbs_g "
         f"FROM daily_nutrition WHERE time >= '{yesterday}T00:00:00Z' "
@@ -419,7 +429,7 @@ SYSTEM_PROMPT = """You are an expert personal fitness and nutrition coach with d
 - Data analysis of wearable metrics from Garmin devices
 
 ATHLETE PROFILE:
-- Name: Your Name
+- Name: Simon Davies
 - Age: 56, Male
 - Gastric sleeve surgery: 14 March 2025 (14+ months post-op, no dumping syndrome)
 - Current weight: 115.1 kg
@@ -666,6 +676,109 @@ def send_email(subject, html_body):
         raise
 
 
+
+# ── Data freshness check ──────────────────────────────────────────────────────
+
+def get_last_sync_age_minutes():
+    """Return how many minutes ago the last Garmin sync occurred."""
+    try:
+        rows = query_influx("GarminStats",
+            "SELECT last(Database_Name) FROM DeviceSync"
+        )
+        if not rows:
+            return None
+        last_sync_str = rows[0].get("time")
+        if not last_sync_str:
+            return None
+        # Parse InfluxDB timestamp
+        last_sync = datetime.datetime.strptime(
+            last_sync_str[:19], "%Y-%m-%dT%H:%M:%S"
+        ).replace(tzinfo=datetime.timezone.utc)
+        age = (datetime.datetime.now(datetime.timezone.utc) - last_sync).total_seconds() / 60
+        return round(age, 1)
+    except Exception as e:
+        log.warning(f"Could not check sync age: {e}")
+        return None
+
+
+def send_stale_data_warning():
+    """Send a warning email when Garmin data hasn't synced within the timeout."""
+    subject = f"⚠️ Training Brief Delayed — Garmin Sync Issue ({datetime.date.today().strftime('%a %d %b %Y')})"
+    html = f"""<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head>
+<body style="font-family:Arial,sans-serif;margin:0;padding:0;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f6f8;">
+<tr><td align="center" style="padding:20px;">
+<table width="620" cellpadding="0" cellspacing="0" border="0">
+
+    <tr><td style="background:#c0392b;padding:20px;">
+        <div style="color:white;font-size:20px;font-weight:bold;">⚠️ Garmin Sync Issue</div>
+        <div style="color:#fadbd8;font-size:13px;">{datetime.date.today().strftime("%A %d %B %Y")}</div>
+    </td></tr>
+
+    <tr><td style="background:white;padding:20px;font-size:14px;line-height:1.7;">
+        <p>Your daily training brief could not be generated because Garmin Connect has not
+        synced recently. The last sync was more than 60 minutes ago and the timeout period
+        has been reached.</p>
+
+        <p><strong>What to do:</strong></p>
+        <ul>
+            <li>Open the Garmin Connect app on your phone to force a sync</li>
+            <li>Check the Garmin Connect app is running in the background</li>
+            <li>Ensure your Fenix 8 is within Bluetooth range of your phone</li>
+        </ul>
+
+        <p>The brief will resume automatically tomorrow morning. If you want today's
+        coaching advice, open your Garmin Connect app to sync, then check your data
+        manually in Grafana at <code>http://nas:3000</code>.</p>
+
+        <p style="color:#888;font-size:12px;">This warning is sent when no Garmin sync
+        is detected within 60 minutes after the brief is due to send.</p>
+    </td></tr>
+
+    <tr><td style="padding:12px;text-align:center;color:#aaa;font-size:11px;">
+        Local AI Fitness Stack · {datetime.datetime.now().strftime("%d %b %Y %H:%M UTC")}
+    </td></tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>"""
+    send_email(subject, html)
+    log.warning("Stale data warning email sent")
+
+
+def wait_for_fresh_data(timeout_hour=8, timeout_minute=0, freshness_minutes=60, retry_minutes=10):
+    """
+    Wait for fresh Garmin data before generating the brief.
+    Returns True if fresh data arrived, False if timeout reached.
+
+    timeout_hour/minute: UTC time after which we give up and send warning
+    freshness_minutes: data must be this recent to be considered fresh
+    retry_minutes: how often to check while waiting
+    """
+    timeout_time = datetime.datetime.now(datetime.timezone.utc).replace(
+        hour=timeout_hour, minute=timeout_minute, second=0, microsecond=0
+    )
+
+    while True:
+        age = get_last_sync_age_minutes()
+
+        if age is not None and age <= freshness_minutes:
+            log.info(f"Fresh data confirmed — last sync {age:.1f} minutes ago")
+            return True
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if now >= timeout_time:
+            log.warning(f"Timeout reached — last sync was {age:.1f} min ago (limit: {freshness_minutes} min)")
+            return False
+
+        mins_remaining = (timeout_time - now).total_seconds() / 60
+        log.info(f"Data stale ({age:.1f} min old) — retrying in {retry_minutes} min "
+                 f"({mins_remaining:.0f} min until timeout)")
+        time.sleep(retry_minutes * 60)
+
+
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 
 def seconds_until(hour, minute):
@@ -680,6 +793,10 @@ def run_daily_brief():
     yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%A %d %B %Y")
     today_str = datetime.date.today().strftime("%A %d %B %Y")
     log.info(f"Running daily brief for {today_str}")
+
+    age = get_last_sync_age_minutes()
+    if age:
+        log.info(f"Garmin data freshness: {age:.1f} minutes since last sync")
 
     # Fetch data
     log.info("Fetching metrics from InfluxDB...")
@@ -943,7 +1060,7 @@ def build_weekly_prompt(this_week, last_week, compliance, week_num):
     next_phase  = get_phase(next_week)
 
     lines = [
-        f"WEEKLY TRAINING SUMMARY — Week {week_num} of 13",
+        f"WEEKLY TRAINING SUMMARY — {week_start.strftime('%d %b')} to {week_end.strftime('%d %b %Y')},",
         f"Phase: {phase}",
         f"Weeks until 100,000 Steps Challenge (29 Aug 2026): {weeks_left}",
         "",
@@ -1026,7 +1143,7 @@ def build_weekly_prompt(this_week, last_week, compliance, week_num):
     return "\n".join(lines)
 
 
-WEEKLY_SYSTEM_PROMPT = """You are an expert personal fitness and nutrition coach providing a weekly performance review for Your Name, 56, male, 115 kg, preparing for the 100,000 Steps Challenge on 29 August 2026. He had gastric sleeve surgery 14 March 2025. His 13-week training plan started 1 June 2026.
+WEEKLY_SYSTEM_PROMPT = """You are an expert personal fitness and nutrition coach providing a weekly performance review for Simon Davies, 56, male, 115 kg, preparing for the 100,000 Steps Challenge on 29 August 2026. He had gastric sleeve surgery 14 March 2025. His 13-week training plan started 1 June 2026.
 
 Weekly training structure: Mon/Wed/Fri = Caliber gym sessions + short walk. Tue/Thu/Sat = long Zone 2 walks. Sunday = rest.
 Zone 2: 98-115 bpm. Weight loss target: 0.8-1.0 kg/week. Protein target: 150g/day (never below 140g).
@@ -1226,6 +1343,9 @@ def format_weekly_html(ai_response, this_week, last_week, compliance, week_num):
     badge_colour = "#27ae60" if score >= 90 else ("#e67e22" if score >= 70 else "#c0392b")
     wc_colour    = "#27ae60" if on_track else "#c0392b"
 
+    week_start_fmt = week_start.strftime("%d %b")
+    week_end_fmt   = week_end.strftime("%d %b %Y")
+
     html = f"""<!DOCTYPE html>
 <html><head><meta charset="UTF-8"></head>
 <body style="font-family:Arial,sans-serif;margin:0;padding:0;color:#333;">
@@ -1237,7 +1357,7 @@ def format_weekly_html(ai_response, this_week, last_week, compliance, week_num):
     <tr><td style="background:#1a5276;padding:24px;border-radius:8px 8px 0 0;">
         <div style="color:white;font-size:22px;font-weight:bold;margin-bottom:4px;">Weekly Training Report</div>
         <div style="color:#aed6f1;font-size:13px;">
-            Week {week_num} of 13 &nbsp;&middot;&nbsp; {phase} &nbsp;&middot;&nbsp; {weeks_left} weeks to 29 Aug 2026
+            {week_start_fmt} &ndash; {week_end_fmt} &nbsp;&middot;&nbsp; {phase} &nbsp;&middot;&nbsp; {weeks_left} weeks to Peddars Way
         </div>
     </td></tr>
 
@@ -1282,22 +1402,33 @@ def format_weekly_html(ai_response, this_week, last_week, compliance, week_num):
 def run_weekly_brief():
     """Generate and send the weekly training summary."""
     today      = datetime.date.today()
-    # Last Monday (week just ended)
-    week_end   = today
-    week_start = today - datetime.timedelta(days=7)
-    # Week before that
-    prev_end   = week_start
-    prev_start = week_start - datetime.timedelta(days=7)
+    # Find the most recently completed Monday-Sunday week
+    # This works correctly whether triggered on Monday or mid-week via RUN_WEEKLY_NOW
+    days_since_sunday = (today.weekday() + 1) % 7  # Sun=0, Mon=1, ..., Sat=6
+    last_sunday  = today - datetime.timedelta(days=days_since_sunday)
+    week_end     = last_sunday                                          # Sun 25 May
+    week_start   = last_sunday - datetime.timedelta(days=6)            # Mon 19 May
 
-    log.info(f"Running weekly summary for week {week_start} to {week_end}")
+    # Extend query end to Monday 07:00 UTC to capture Sunday night sleep
+    # (sleep starts ~21:00-22:00 UTC Sunday, written after waking Monday morning)
+    week_end_query = last_sunday + datetime.timedelta(days=1)          # Mon 26 May
+
+    # Week before that (comparison period)
+    prev_end   = week_start - datetime.timedelta(days=1)               # Sun 18 May
+    prev_start = prev_end - datetime.timedelta(days=6)                 # Mon 12 May
+    prev_end_query = week_start
+
+    log.info(f"Running weekly summary for week {week_start} (Mon) to {week_end} (Sun)")
 
     # Calculate week number
-    plan_start = datetime.date(2026, 6, 1)
+    plan_start   = datetime.date(2026, 6, 1)
     days_elapsed = (week_start - plan_start).days
-    week_num = max(1, min(13, (days_elapsed // 7) + 1))
+    week_num     = max(1, min(13, (days_elapsed // 7) + 1)) if days_elapsed >= 0 else 0
 
-    this_week  = get_weekly_metrics(week_start, week_end)
-    last_week  = get_weekly_metrics(prev_start, prev_end)
+    log.info(f"Weekly period: {week_start} to {week_end} (query extends to {week_end_query})")
+    log.info(f"Previous period: {prev_start} to {prev_end}")
+    this_week  = get_weekly_metrics(week_start, week_end_query)
+    last_week  = get_weekly_metrics(prev_start, prev_end_query)
     compliance = calculate_compliance(this_week, week_num)
 
     log.info(f"  This week: {this_week.get('total_steps',0):,} steps, "
@@ -1311,7 +1442,7 @@ def run_weekly_brief():
                       "Your weekly data is shown below.")
         log.warning("Weekly summary: LM Studio unreachable")
 
-    subject    = f"Weekly Training Report — Week {week_num} of 13"
+    subject    = f"Weekly Training Report — {week_start.strftime('%d %b')} to {week_end.strftime('%d %b %Y')}"
     html       = format_weekly_html(ai_response, this_week, last_week, compliance, week_num)
     send_email(subject, html)
     log.info("Weekly summary sent")
@@ -1336,10 +1467,12 @@ def main():
 
     while True:
         now  = datetime.datetime.now()
-        # Check if it's Monday 02:00 for weekly summary
-        if now.weekday() == 0 and now.hour == 2 and now.minute < 5:
+        # Check if it's Monday 10:00 UTC for weekly summary
+        # Running at 10:00 UTC (11:00 BST) ensures Sunday night sleep data
+        # has had time to sync from Garmin Connect before the report fires
+        if now.weekday() == 0 and now.hour == 10 and now.minute < 5:
             try:
-                log.info("Monday 02:00 — running weekly summary")
+                log.info("Monday 10:00 UTC — running weekly summary")
                 run_weekly_brief()
             except Exception as e:
                 log.error(f"Weekly summary failed: {e}")
@@ -1353,7 +1486,18 @@ def main():
         time.sleep(secs)
 
         try:
-            run_daily_brief()
+            # Wait for fresh Garmin data before generating brief
+            # Timeout at 08:00 UTC (09:00 BST) — retries every 10 min
+            fresh = wait_for_fresh_data(
+                timeout_hour=8,
+                timeout_minute=0,
+                freshness_minutes=60,
+                retry_minutes=10,
+            )
+            if fresh:
+                run_daily_brief()
+            else:
+                send_stale_data_warning()
         except Exception as e:
             log.error(f"Daily brief failed: {e}")
 
