@@ -18,7 +18,7 @@ A fully self-hosted fitness intelligence platform that combines your wearable da
 │   │      NAS (192.168.1.60)          │   │  Max (192.168.1.50) │  │
 │   │      QNAP TS873A                 │   │  MS-S1 Max          │  │
 │   │                                  │   │                     │  │
-│   │  InfluxDB :8086                  │◄──│  LM Studio :1234    │  │
+│   │  InfluxDB :8086                  │◄──│  Ollama :11434    │  │
 │   │    └─ GarminStats DB             │   │  Qwen3.6-27B        │  │
 │   │    └─ CronometerStats DB         │──►│  (daily brief       │  │
 │   │                                  │   │   calls LLM API)    │  │
@@ -54,7 +54,7 @@ Every 30 minutes:
     ├── Queries yesterday's sleep, HRV, steps, activities, strength sets, nutrition
     ├── Loads current week's treadmill session from TREADMILL_TRAINING_GUIDE.md
     ├── Adapts session based on recovery data (HRV + sleep + body battery)
-    ├──► Qwen3.6-27B API (192.168.1.50:1234)
+    ├──► Qwen3.6-27B API (192.168.1.50:11434)
     │      AI generates: READINESS | TODAY'S PLAN | KEY FOCUS
     │      Includes planned vs actual strength comparison (March 2026 Caliber plan)
     │
@@ -68,7 +68,7 @@ Every 30 minutes:
 | Device | Role | IP |
 |--------|------|-----|
 | QNAP TS873A (NAS) | InfluxDB, Grafana, all containers | 192.168.1.60 |
-| Minisforum MS-S1 Max (Max) | LM Studio + Qwen3.6-27B inference server | 192.168.1.50 |
+| Minisforum MS-S1 Max (Max) | Ollama + Qwen3.6-27B inference server | 192.168.1.50 |
 
 **Max's AI specs:** 128 GB UMA RAM, Radeon 8060S iGPU. Qwen3.6-27B at Q6_K (~22.5 GB VRAM) runs entirely on-GPU.
 
@@ -80,7 +80,7 @@ Every 30 minutes:
 |---------|------|------|--------|
 | InfluxDB HTTP API | NAS | 8086 | Internal (sync scripts) |
 | Grafana Web UI | NAS | 3000 | Browser on local network |
-| LM Studio API | Max | 1234 | Daily brief + manual chat |
+| Ollama API | Max | 1234 | Daily brief + manual chat |
 
 ---
 
@@ -116,7 +116,7 @@ The AI coaching brief compares actual StrengthSets data against the embedded Mar
 | `01-nas-docker-stack.md` | Deploy InfluxDB + Grafana on QNAP; create databases |
 | `02-garmin-sync.md` | garmin-direct-sync container: setup, auth, backfill |
 | `03-cronometer-sync.md` | Cronometer export → InfluxDB pipeline |
-| `04-lmstudio-qwen.md` | LM Studio on Max: model download, API server, thinking mode |
+| `04-ollama-qwen.md` | Ollama on Max: model download, API server, thinking mode |
 | `05-ai-fitness-assistant.md` | System prompt, manual data queries, coaching prompts |
 | `06-100k-steps-challenge.md` | 14-week training + nutrition plan for 29 Aug challenge |
 | `07-coaching-emails-guide.md` | Automated daily coaching email via Brevo API |
@@ -124,7 +124,7 @@ The AI coaching brief compares actual StrengthSets data against the embedded Mar
 | `Caliber_MCP_Integration_Guide.md` | Caliber MCP OAuth status + test procedures |
 | `TREADMILL_TRAINING_GUIDE.md` | Week-by-week NordicTrack T5 session protocols |
 | `garmin_notes_templates.txt` | Copy-paste exercise templates for Garmin Connect |
-| `system_prompt.txt` | Current AI system prompt — paste into LM Studio |
+| `system_prompt.txt` | Current AI system prompt — paste into Ollama |
 
 **Reading order for setup:** 01 → 02 → 03 → 04 → 07 → 05 → 06 → TREADMILL
 
@@ -146,7 +146,7 @@ The AI coaching brief compares actual StrengthSets data against the embedded Mar
 - QNAP Container Station 3.x installed and running
 - SSH access enabled on NAS (Control Panel → Terminal & SNMP)
 - Windows 11 Pro on Max with AMD Adrenalin drivers up to date
-- LM Studio installed on Max (lmstudio.ai)
+- Ollama installed on Max (ollama.ai)
 - Garmin Connect account with Fenix 8 syncing
 - Cronometer account with daily nutrition logging
 - Brevo account (free tier) for email delivery

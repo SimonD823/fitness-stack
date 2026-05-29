@@ -100,9 +100,9 @@ Mount `/var/lib/influxdb/backup` to a NAS share outside the container volume.
 
 ## Priority 3 — Known Minor Issues
 
-### 3.1 LM Studio Auto-Start
+### 3.1 Ollama Auto-Start
 
-LM Studio is configured to start on Windows boot. Windows updates can occasionally prevent the model from auto-loading. If the daily brief shows "AI analysis unavailable", open LM Studio on Max and load Qwen3.6-27B manually. Consider using Windows Task Scheduler with a 2-minute delay instead of the Startup folder for more reliable auto-start.
+Ollama is configured to start on Windows boot. Windows updates can occasionally prevent the model from auto-loading. If the daily brief shows "AI analysis unavailable", open Ollama on Max and load Qwen3.6-27B manually. Consider using Windows Task Scheduler with a 2-minute delay instead of the Startup folder for more reliable auto-start.
 
 ### 3.2 Warm-Up Set Detection
 
@@ -124,4 +124,4 @@ After 29 August the training plan ends at Week 14. The daily brief will continue
 | InfluxDB backup | Medium | 20 min |
 | HR zone calibration | Medium | 1 hour field test |
 | Bariatric dietitian consult | High (personal) | Appointment |
-| LM Studio auto-start robustness | Low | 15 min |
+| Ollama auto-start robustness | Low | 15 min |
