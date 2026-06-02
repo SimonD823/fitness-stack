@@ -1,17 +1,17 @@
 # Guide 05 — AI Fitness Assistant: System Prompt, Prompting, and Daily Workflow
 
-**LLM endpoint:** Max — http://MAX_IP:1234  
-**Data source:** InfluxDB on NAS — http://NAS_IP:8086
+**LLM endpoint:** Max — http://192.168.1.50:11434  
+**Data source:** InfluxDB on NAS — http://192.168.1.60:8086
 
 This guide covers three things: the system prompt that turns Qwen3 into a knowledgeable fitness coach, how to extract your data from InfluxDB to include in conversations, and practical prompting patterns for your three core goals — nutrition coaching, training load analysis, and race planning.
 
-> **Primary event:** 100,000 Steps Challenge — Saturday 29 August 2026 (14 weeks away from setup date). See **Guide 06** for the dedicated training and nutrition plan for this event.
+> **Primary event:** 100,000 Steps Challenge — Saturday 29 August 2026 (13 weeks away from setup date). See **Guide 06** for the dedicated training and nutrition plan for this event.
 
 ---
 
 ## Part 1 — System Prompt
 
-Paste this into LM Studio's System Prompt field (Chat view → click the system prompt area at the top, or in your Fitness Coach preset):
+Paste this into Ollama's System Prompt field (Chat view → click the system prompt area at the top, or in your Fitness Coach preset):
 
 ```
 You are an expert personal fitness and nutrition coach with deep knowledge in:
@@ -75,9 +75,9 @@ Always reference the 29 August challenge as the primary training target.
 
 ## Part 2 — Extracting Data from InfluxDB
 
-You need to pull data out of InfluxDB and paste it into your conversations as context. All queries run from the **NAS SSH session** (`ssh admin@NAS_IP`) and use `docker exec` to reach inside the influxdb container.
+You need to pull data out of InfluxDB and paste it into your conversations as context. All queries run from the **NAS SSH session** (`ssh admin@192.168.1.60`) and use `docker exec` to reach inside the influxdb container.
 
-**How to use the output:** Copy the text from the terminal and paste it directly into your LM Studio chat before your question. The AI uses it as context for that session.
+**How to use the output:** Copy the text from the terminal and paste it directly into your Ollama chat before your question. The AI uses it as context for that session.
 
 > **Weight note:** Your current weight is 115.1 kg. Include this when prompting manually so the AI uses accurate calorie and macro targets.
 
@@ -85,37 +85,37 @@ You need to pull data out of InfluxDB and paste it into your conversations as co
 
 **Last 7 days of daily summary (steps, resting HR, sleep, stress, body battery):**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database GarminStats   -format csv   -execute "SELECT totalSteps, restingHeartRate, bodyBatteryHighestValue, bodyBatteryLowestValue, highStressDuration, lowStressDuration FROM DailyStats WHERE time >= now() - 7d ORDER BY time ASC"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database GarminStats   -format csv   -execute "SELECT totalSteps, restingHeartRate, bodyBatteryHighestValue, bodyBatteryLowestValue, highStressDuration, lowStressDuration FROM DailyStats WHERE time >= now() - 7d ORDER BY time ASC"
 ```
 
 **Last 7 days of sleep:**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database GarminStats   -format csv   -execute "SELECT sleepTimeSeconds, sleepScore, avgOvernightHrv, deepSleepSeconds, remSleepSeconds, bodyBatteryChange FROM SleepSummary WHERE time >= now() - 7d ORDER BY time ASC"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database GarminStats   -format csv   -execute "SELECT sleepTimeSeconds, sleepScore, avgOvernightHrv, deepSleepSeconds, remSleepSeconds, bodyBatteryChange FROM SleepSummary WHERE time >= now() - 7d ORDER BY time ASC"
 ```
 
 **Last 7 days of nutrition:**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database CronometerStats   -format csv   -execute "SELECT Energy_kcal, Protein_g, Fat_g, Carbs_g, Net_Carbs_g FROM daily_nutrition WHERE time >= now() - 7d ORDER BY time ASC"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database CronometerStats   -format csv   -execute "SELECT Energy_kcal, Protein_g, Fat_g, Carbs_g, Net_Carbs_g FROM daily_nutrition WHERE time >= now() - 7d ORDER BY time ASC"
 ```
 
 **Recent activities (last 10):**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database GarminStats   -format csv   -execute "SELECT activityName, activityType, calories, averageHR, elapsedDuration, activityTrainingLoad FROM ActivitySummary ORDER BY time DESC LIMIT 10"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database GarminStats   -format csv   -execute "SELECT activityName, activityType, calories, averageHR, elapsedDuration, activityTrainingLoad FROM ActivitySummary ORDER BY time DESC LIMIT 10"
 ```
 
 **Recent strength sessions — activity summaries (last 5 strength sessions):**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database GarminStats   -format csv   -execute "SELECT activityName, calories, averageHR, elapsedDuration, activityTrainingLoad FROM ActivitySummary WHERE activityType = 'strength_training' ORDER BY time DESC LIMIT 5"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database GarminStats   -format csv   -execute "SELECT activityName, calories, averageHR, elapsedDuration, activityTrainingLoad FROM ActivitySummary WHERE activityType = 'strength_training' ORDER BY time DESC LIMIT 5"
 ```
 
 **Recent strength set detail (last session):**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database GarminStats   -format csv   -execute "SELECT exercise, reps, weight_kg, volume_kg FROM StrengthSets ORDER BY time DESC LIMIT 20"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database GarminStats   -format csv   -execute "SELECT exercise, reps, weight_kg, volume_kg FROM StrengthSets ORDER BY time DESC LIMIT 20"
 ```
 
 **Latest weight:**
 ```bash
-docker exec influxdb influx   -username admin   -password YOUR_INFLUX_ADMIN_PASSWORD   -database GarminStats   -format csv   -execute "SELECT last(weight)/1000 FROM BodyComposition"
+docker exec influxdb influx   -username admin   -password adminSecretPassword   -database GarminStats   -format csv   -execute "SELECT last(weight)/1000 FROM BodyComposition"
 ```
 
 ---
@@ -132,7 +132,7 @@ Here is my nutrition and training data for the past week:
 
 My goals:
 - Body weight: [your weight] kg
-- Training goal: [e.g. marathon in 14 weeks / general fitness / lose X kg]
+- Training goal: [e.g. marathon in 13 weeks / general fitness / lose X kg]
 - Current training volume: approximately [X hours/week]
 
 Questions:
@@ -211,9 +211,9 @@ loading strategy for the 3 days before the race and an on-course fuelling plan.
 
 ## Part 4 — Thinking Mode for Deep Analysis
 
-Qwen3 supports a "thinking" mode where it reasons through a problem step by step before answering. Turn this on in LM Studio for complex multi-factor questions (race planning, interpreting conflicting signals in your data). Turn it off for quick daily check-ins — it is slower but more thorough.
+Qwen3 supports a "thinking" mode where it reasons through a problem step by step before answering. Turn this on in Ollama for complex multi-factor questions (race planning, interpreting conflicting signals in your data). Turn it off for quick daily check-ins — it is slower but more thorough.
 
-In LM Studio: toggle the **Thinking** 💡 switch in the chat toolbar.
+In Ollama: toggle the **Thinking** 💡 switch in the chat toolbar.
 
 Use thinking mode for:
 - Race plans (multiple phases, many variables)
@@ -227,19 +227,19 @@ Use standard mode for:
 
 ---
 
-## Part 5 — Accessing LM Studio From Other Devices
+## Part 5 — Accessing Ollama From Other Devices
 
-The LM Studio API is OpenAI-compatible, which means any tool that supports a custom OpenAI endpoint can talk to it.
+The Ollama API is OpenAI-compatible, which means any tool that supports a custom OpenAI endpoint can talk to it.
 
 **From a browser on any device on your network:**
 ```
-http://MAX_IP:1234/v1/models
+http://192.168.1.50:11434/v1/models
 ```
-This opens the LM Studio web chat interface.
+This opens the Ollama web chat interface.
 
 **From a terminal on any machine:**
 ```bash
-curl http://MAX_IP:1234/v1/chat/completions \
+curl http://192.168.1.50:11434/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "qwen3.6-27b",
@@ -250,7 +250,7 @@ curl http://MAX_IP:1234/v1/chat/completions \
 ```
 
 **Open WebUI (optional — adds a polished multi-model chat UI):**
-If you want a more feature-rich chat interface than LM Studio's built-in one, Open WebUI is a popular open-source option that connects to the LM Studio API. It can be deployed as a container on the NAS alongside Grafana.
+If you want a more feature-rich chat interface than Ollama's built-in one, Open WebUI is a popular open-source option that connects to the Ollama API. It can be deployed as a container on the NAS alongside Grafana.
 
 ```yaml
 # Add this service to your fitness-stack docker-compose.yml on the NAS
@@ -261,7 +261,7 @@ If you want a more feature-rich chat interface than LM Studio's built-in one, Op
     ports:
       - "8080:8080"
     environment:
-      OPENAI_API_BASE_URL: "http://MAX_IP:1234/v1"
+      OPENAI_API_BASE_URL: "http://192.168.1.50:11434/v1"
       OPENAI_API_KEY: "not-needed"
     volumes:
       - /share/Container/fitness-stack/open-webui:/app/backend/data
@@ -269,7 +269,7 @@ If you want a more feature-rich chat interface than LM Studio's built-in one, Op
       - fitness-net
 ```
 
-Access at `http://NAS_IP:8080`.
+Access at `http://192.168.1.60:8080`.
 
 ---
 
@@ -278,16 +278,16 @@ Access at `http://NAS_IP:8080`.
 **Daily routine:**
 1. Morning: Garmin sync runs automatically every 6 hours — no action needed
 2. Morning: Cronometer sync task runs at 7 AM — no action needed
-3. When you want coaching: run `get_fitness_context.py`, paste output into LM Studio, ask your question
+3. When you want coaching: run `get_fitness_context.py`, paste output into Ollama, ask your question
 
 **Weekly:**
-- Check Grafana dashboards (`http://NAS_IP:3000`) for trend views
+- Check Grafana dashboards (`http://192.168.1.60:3000`) for trend views
 - Review the Garmin Stats dashboard for HRV and Body Battery trends
 - Check the nutrition dashboard for macro compliance over the week
 
 **Monthly:**
 - Run `docker compose pull` in each sync directory to update to the latest container images
-- Check LM Studio for model updates — newer Qwen3 quantisations occasionally improve quality
+- Check Ollama for model updates — newer Qwen3 quantisations occasionally improve quality
 
 ---
 
@@ -295,11 +295,11 @@ Access at `http://NAS_IP:8080`.
 
 1. Open a terminal and run:
    ```bash
-   ssh admin@NAS_IP python3 /share/Container/get_fitness_context.py
+   ssh admin@192.168.1.60 python3 /share/Container/get_fitness_context.py
    ```
    Copy the output.
 
-2. Open LM Studio on Max (or verify the API at `http://MAX_IP:1234/v1/models`)
+2. Open Ollama on Max (or verify the API at `http://192.168.1.50:11434/v1/models`)
 
 3. Select the **Fitness Coach** preset
 

@@ -18,7 +18,7 @@ CaliberStats is not backed up (empty until Caliber sync is configured).
 ## Backup Structure
 
 ```
-/share/Backup/influxdb/
+/share/backup/influxdb/
 ├── backup.log              ← running log of all backup operations
 ├── 2026-06-01/
 │   ├── GarminStats/        ← portable backup files
@@ -52,12 +52,12 @@ Recreate the fitness-stack application after this change.
 
 Via Windows Explorer create:
 ```
-\\nas\Backup\influxdb\
+\\nas\backup\influxdb\
 ```
 
-If a `Backup` share doesn't exist, create it in QNAP:
+If a `backup` share doesn't exist, create it in QNAP:
 1. Open **Control Panel → Shared Folders**
-2. Click **Create** → name it `Backup`
+2. Click **Create** → name it `backup`
 3. Set permissions as needed
 
 ---
@@ -88,7 +88,7 @@ Run manually from NAS SSH to verify it works before scheduling:
 Check the output — should show each database backing up and copying successfully. Verify the backup folder was created:
 
 ```bash
-ls -la /share/Backup/influxdb/
+ls -la /share/backup/influxdb/
 ```
 
 ---
@@ -117,7 +117,7 @@ To restore a database from a backup:
 ssh admin@nas
 
 # Copy backup files into the container
-docker cp /share/Backup/influxdb/2026-06-01/GarminStats influxdb:/var/lib/influxdb/restore/
+docker cp /share/backup/influxdb/2026-06-01/GarminStats influxdb:/var/lib/influxdb/restore/
 
 # Restore
 docker exec influxdb influxd restore \
@@ -137,13 +137,13 @@ From NAS SSH:
 
 ```bash
 # View last backup log entries
-tail -50 /share/Backup/influxdb/backup.log
+tail -50 /share/backup/influxdb/backup.log
 
 # Check backup sizes
-du -sh /share/Backup/influxdb/*/
+du -sh /share/backup/influxdb/*/
 
 # List all backups
-ls -lt /share/Backup/influxdb/
+ls -lt /share/backup/influxdb/
 ```
 
 ---
