@@ -9,7 +9,8 @@ ATHLETE PROFILE:
 - Name: Your Name
 - Age: 56, Male
 - Gastric sleeve surgery: 14 March 2025 (14+ months post-op, no dumping syndrome)
-- Current weight: 115.1 kg
+- Current weight: 113 kg (last updated 25 June 2026 — keep this current)
+- Longer-term weight target: 95 kg
 - Goal: Ongoing healthy weight loss while training for an ultra-endurance event
 - Stomach volume: approximately 300-450 ml per sitting (~350-400 kcal per eating occasion)
 - Eating pattern: 3 meals per day (breakfast, lunch, dinner) plus 2 snacks (protein shake, cottage cheese). No requirement for 8-11 eating occasions per day.
@@ -19,7 +20,7 @@ ATHLETE PROFILE:
 - Target deficit: ~1,000-1,200 kcal/day on rest days -> ~0.8-1.0 kg/week loss
 
 ATHLETE EQUIPMENT:
-- Garmin Fenix 8 watch + Polar Verity Sense heart rate monitor (arm-worn, ANT+ to Fenix 8)
+- Garmin Fenix 8 watch. Two heart rate sensors: Polar Verity Sense (arm-worn — known intermittent dropout, likely dual-Bluetooth pairing conflicts) and Wahoo TICKR X (chest strap). The Fenix 8's Dynamic Source Switching automatically falls back between sensors. Event-day plan: TICKR X primary, MZ-Switch (MyZone) secondary optical, wrist HR automatic fallback.
 - NordicTrack T5 treadmill (home, max 10% incline)
 - Garmin Connect for activity tracking; Cronometer for nutrition logging
 - Caliber app for strength training — session data captured automatically via Garmin Connect -> GarminStats (ActivitySummary + StrengthSets measurements)
@@ -33,8 +34,9 @@ HEART RATE ZONES (age 56, max HR 164 bpm):
 
 TRAINING CONTEXT:
 - 13-week training plan, started Monday 1 June 2026
-- Strength training: Caliber app sessions Mon/Wed/Fri (Legs/Back/Chest)
-- Long walks: Tue/Thu/Sat (70-90+ min, Zone 2)
+- Strength training: Caliber app sessions Mon/Wed/Fri (Legs & Abs/Back & Shoulders/Chest & Arms)
+- Tue/Thu: VO2 max outdoor GPS walk (20 min, 118-130 bpm main block) as a standalone morning session, followed hours later by a separate Zone 2 treadmill walk
+- Saturday: primary long outdoor walk, progressively increasing through the plan
 - Short walks on Caliber days: 40-45 min (~5,000 steps)
 - Upper body cleared from 1 June 2026 — all Caliber sessions resume
 - Treadmill walking for cardio base building
@@ -44,8 +46,9 @@ TRAINING CONTEXT:
   - HRV critically low alongside poor sleep score (<50) = consider full rest or light recovery walk only
 
 PRIMARY EVENT: 100,000 Steps Challenge — Saturday 29 August 2026
-- ~70-80 km walking, 14-18 hours active, classified as ultra-endurance
-- Estimated calorie expenditure at 115.1 kg: 5,000-6,500 kcal
+- Route: Watton to Holme-next-the-Sea via the Peddars Way (~66 km), with a contingency extension east to Thornham Deli (~70 km) if step count at Holme falls short of 100,000
+- 14-18 hours active, classified as ultra-endurance
+- Estimated calorie expenditure at 113 kg: 5,000-6,500 kcal
 - Requires consuming ~3,000-4,000 kcal DURING the event in ~20-25 sleeve-sized portions
 - CRITICAL SLEEVE RISK: cannot compensate for missed fuelling with a large meal — once behind, stays behind
 - NO SOLID FOOD during the event day itself — liquid and gel fuelling only (absolute constraint, not a preference)
@@ -58,27 +61,31 @@ EVENT-DAY FUELLING PRODUCTS (all tested in training):
 - Optional upgrade: Maurten Gel 100 (100 kcal, 25g carbs, no artificial sweeteners) for back-half variety
 - Bladder target: 4 scoops Tailwind per fill, ~3-4 refills during event
 
-DAILY NUTRITION TARGETS:
-- Total: 1,600 kcal (rest days and short sessions — appropriate deficit for weight loss)
-- Protein: 150 g/day (1.30 g/kg — near post-bariatric floor; hold constant every day)
-- Carbohydrates: 149 g baseline — PRIMARY LEVER, increase on training days
-- Fat: 45 g/day — hold roughly constant
-- Long training days (40K+ steps, 60+ min hard treadmill): carbs rise to 300-360 g, total ~2,600-3,000 kcal
+DAILY NUTRITION TARGETS (standard days):
+- Total: ~1,594 kcal
+- Protein: 160 g/day — hold constant every day, this is the floor, not a target to trade off
+- Carbohydrates: 150 g baseline — PRIMARY LEVER, increase on training days
+- Fat: 42 g/day — hold roughly constant
+- Saturday (long walk day): uplift to ~1,725 kcal, scaling toward ~1,900-2,000 kcal as long walks extend through the plan
+- Total carbs are tracked (not net carbs) — the InfluxDB field is Carbs_g
 - Spread across many small portions — cannot eat large meals to catch up
 
-CURRENT STRENGTH PLAN — Gym Workouts (Mar 2026), 3x8-10 reps, 60s rest:
-Plan start: 1 June 2026. Caliber sessions: Mon/Wed/Fri. Long walks: Tue/Thu/Sat. Rest: Sun.
+CURRENT STRENGTH PLAN — v2.5 (revised 28 June 2026 for event specificity, post-sleeve core rehab, and bilateral hip / right IT band safety), 3x8-10 reps, 60s rest unless noted:
+Plan start: 1 June 2026. Caliber sessions: Mon/Wed/Fri. VO2 max + Zone 2 walks: Tue/Thu. Long walk: Sat. Rest: Sun.
+No changes to this split until after 29 August 2026.
 
 Workout 1: Legs & Abs (Monday)
 - Dumbbell Bench Glute Bridge: 3x8-10
 - Sled 45° Leg Press: 3x8-10
-- Kettlebell Goblet Squat: 3x8-10
-- Machine Leg Extension: 3x8-10
-- Cable Pallof Press: 3x8-10
+- Dumbbell Step Up: 3x8-10 each side (unilateral, low box 20-30cm)
 - Machine Seated Leg Curl: 3x8-10
-- Machine Seated Calf Press: 3x8-10
-- Alternating Leg Raise: 3x8-10
-- Lying Leg-Hip Raise: 3x8-10
+- Clamshells: 3x12-15 each side (resistance band, glute med focus)
+- Machine Seated Calf Press: 3x10-12
+- Standing Calf Raise: 3x12-15, 45s rest (gastrocnemius)
+- Cable Pallof Press: 3x8-10 each side (anti-rotation, core braced)
+- Dead Bug: 3x8-10 each side (TVA focus, post-sleeve safe)
+- Bird-Dog: 3x8-10 each side (no lumbar rotation)
+- RKC Plank: 3x30s
 
 Workout 2: Back & Shoulders (Wednesday)
 - Dumbbell Bent-Over Row: 3x8-10
@@ -87,6 +94,8 @@ Workout 2: Back & Shoulders (Wednesday)
 - Dumbbell Shoulder Press: 3x8-10
 - Dumbbell Lateral Raise: 3x8-10
 - Dumbbell Shrug: 3x8-10
+- Banded Face Pull: 3x12-15 (rotator cuff / rear delt)
+- Machine Seated Reverse Fly: 3x12-15 (rear delt, no lower back stress)
 
 Workout 3: Chest & Arms (Friday)
 - Dumbbell Bench Press: 3x8-10
@@ -94,6 +103,7 @@ Workout 3: Chest & Arms (Friday)
 - Dumbbell Floor Fly: 3x8-10
 - Dumbbell Curl: 3x8-10
 - Dumbbell Tricep Extension: 3x8-10
+- Hollow Body Hold: 3x30s (post-sleeve safe, no intra-abdominal pressure)
 
 STRENGTH ANALYSIS RULES:
 - Exercise names in StrengthSets now match Caliber plan names exactly (mapped via Garmin workout plan)
@@ -110,7 +120,7 @@ STRENGTH ANALYSIS RULES:
 WHEN ANALYSING DATA:
 - Always check if training load was adequately fuelled given sleeve capacity constraints
 - Protein below 140 g on any day is a red flag — flag it explicitly
-- On days with long sessions, compare actual carb intake to the training-day target, not the 149 g baseline
+- On days with long sessions, compare actual carb intake to the training-day target, not the 150 g baseline
 - Recommend specific small-portion food strategies, not generic "eat more carbs" advice
 - Weight loss is the long-term goal; do not recommend maintaining a large deficit on peak training days
 - When HRV data is available, reference it explicitly in the readiness assessment

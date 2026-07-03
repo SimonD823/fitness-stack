@@ -4,7 +4,7 @@
 
 A fully self-hosted fitness intelligence platform combining Garmin wearable data, strength training tracking, nutrition monitoring, a local LLM, and automated coaching emails — all running on your own hardware with zero cloud dependency after setup.
 
-**Primary goal:** 100,000 Steps Challenge — Saturday 29 August 2026 (~70–80 km).
+**Primary goal:** 100,000 Steps Challenge — Saturday 29 August 2026. Route: Watton to Holme-next-the-Sea via the Peddars Way (~66 km), with a contingency extension east to Thornham Deli (~70 km) if the step count at Holme falls short of 100,000.
 
 ---
 
@@ -19,11 +19,14 @@ Remote (iPhone/iPad)
                   ├── InfluxDB :8086        ← all health + training data
                   ├── Grafana :3000         ← dashboards + strength panels
                   ├── garmin-direct-sync    ← Garmin Connect → InfluxDB (every 30 min)
-                  ├── cronometer-sync       ← nutrition → InfluxDB (01:00 AM daily)
+                  ├── cronometer-sync       ← nutrition → InfluxDB (06:00 AM London daily)
                   ├── daily-brief           ← coaching emails (08:00 AM + Mon 07:00 AM)
                   ├── open-webui :3001      ← chat UI → Ollama on Max
-                  ├── training-dashboard :3002 ← planned vs actual training view
-                  └── caliber-sync          ← Caliber → InfluxDB (01:00 AM daily)
+                  └── training-dashboard :3002 ← planned vs actual training view
+
+                  (No caliber-sync container — Caliber's MCP OAuth is still blocked.
+                  Strength data comes from garmin-direct-sync only. See
+                  Caliber_MCP_Integration_Guide.md.)
                                                     │
                                             Max (192.168.1.50) — auto-starts on boot
                                             └── Ollama :11434
@@ -51,9 +54,15 @@ Every 30 minutes:
     - All health metrics (steps, HRV, sleep, HR, stress, body battery)
     - Strength sessions with Caliber exercise names via workout plan mapping
 
-01:00 AM daily:
+06:00 AM London time daily:
   Cronometer.com → cronometer-sync → CronometerStats (InfluxDB)
-  Caliber app → caliber-sync (Anthropic API + MCP) → CaliberStats (InfluxDB)
+
+Continuous (no schedule — see note below):
+  Strength sessions recorded on the Fenix 8 → garmin-direct-sync → GarminStats.StrengthSets
+  (This is the permanent data path for strength detail. Caliber's own MCP server is not
+  automatable — its OAuth redirect URI isn't registered with Caliber, so there is no
+  scheduled caliber-sync container. Caliber data is only reachable interactively via the
+  Claude.ai connector. See Caliber_MCP_Integration_Guide.md.)
 
 08:00 AM daily (Mon-Sat):
   Data freshness check → wait for Garmin sync → daily coaching email via Ollama
@@ -75,17 +84,18 @@ Every hour at :30:
 
 ## Containers & Applications
 
-5 Container Station applications (7 containers total):
+5 Container Station applications (6 containers total):
 
 | Application | Container(s) | Schedule | Purpose |
 |-------------|-------------|----------|---------|
 | `fitness-stack` | `influxdb` + `grafana` | Always on | Core data stack |
-| `garmin-direct-sync` | `garmin-direct-sync` | Every 30 min | Garmin → InfluxDB |
-| `cronometer-sync` | `cronometer-sync` | 01:00 AM daily | Nutrition → InfluxDB |
+| `garmin-direct-sync` | `garmin-direct-sync` | Every 30 min | Garmin → InfluxDB (includes strength sets) |
+| `cronometer-sync` | `cronometer-sync` | 06:00 AM London daily | Nutrition → InfluxDB |
 | `daily-brief` | `daily-brief` | Multiple schedules | All coaching emails + monitoring |
 | `open-webui` | `open-webui` | Always on | Chat UI → Ollama |
 | `training-dashboard` | `training-dashboard` | Always on | Planned vs actual view :3002 |
-| `caliber-sync` | `caliber-sync` | 01:00 AM daily | Caliber → InfluxDB via Anthropic API |
+
+> **No `caliber-sync` container exists.** Caliber's MCP OAuth flow is still blocked (see `Caliber_MCP_Integration_Guide.md`) — its tokens are session-bound to the Claude.ai connector and can't be run unattended on a schedule. Strength set/rep/weight detail comes exclusively from `garmin-direct-sync` via the Garmin workout plan name mapping below.
 
 ---
 
@@ -199,8 +209,9 @@ The Flask training dashboard at `http://nas:3002` shows planned vs actual sessio
 | Date | Milestone |
 |------|-----------|
 | 1 June 2026 | Caliber gym sessions resume, 13-week plan starts |
-| 29 June 2026 | Week 5 — Saturday walks reach 150 min |
-| 3-9 August 2026 | Week 10 — Dress rehearsal week |
+| 29 June 2026 | Week 5 — Saturday walks reach 120 min |
+| 13-19 July 2026 | Week 7 — Saturday walks reach 150 min |
+| 3-9 August 2026 | Week 10 — Dress rehearsal week (full-kit, 240 min) |
 | 17 August 2026 | Taper begins |
 | 24 August 2026 | Event week — no Caliber, minimal training |
 | **29 August 2026** | **100,000 Steps Challenge — Peddars Way** |

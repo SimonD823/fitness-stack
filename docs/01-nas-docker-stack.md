@@ -268,7 +268,7 @@ Open a browser on any device on your local network and go to:
 
 In Grafana, go to **Connections → Data Sources** and confirm both `InfluxDB-Garmin` and `InfluxDB-Cronometer` appear. Click each one and press **Save & Test** — both should report "datasource is working."
 
-> The `GarminStats` database is populated by the weekly Caliber MCP export (see `Caliber_MCP_Integration_Guide.md`) and does not need a Grafana datasource at this stage unless you want to build dedicated strength dashboards later.
+> `GarminStats` (including strength set/rep/weight detail in `StrengthSets`) is populated entirely by `garmin-direct-sync` — see Guide 02. There is no separate Caliber export feeding this database; Caliber's own MCP server is still blocked on OAuth (see `Caliber_MCP_Integration_Guide.md`) and has no scheduled sync of its own.
 
 ---
 

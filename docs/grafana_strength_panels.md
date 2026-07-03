@@ -83,18 +83,20 @@ GROUP BY time(7d) fill(none)
 
 ## Exercise Names in InfluxDB
 
-All exercises use Caliber plan names matched via the Garmin workout plan description field:
+All exercises use Caliber plan names matched via the Garmin workout plan description field. This list reflects the v2.5 split (revised 28 June 2026 — see `TRAINING_PLAN_V2.md`), which replaced several exercises for hip/knee safety and added post-sleeve core stabiliser work. Panels covering the retired exercises (Kettlebell Goblet Squat, Machine Leg Extension, Alternating Leg Raise, Lying Leg-Hip Raise) will still show historical data up to 28 June but no new points after that.
 
 **Legs & Abs (Monday)**
 - Dumbbell Bench Glute Bridge
 - Sled 45Â° Leg Press ← note encoding
-- Kettlebell Goblet Squat
-- Machine Leg Extension
-- Cable Pallof Press
+- Dumbbell Step Up
 - Machine Seated Leg Curl
+- Clamshells
 - Machine Seated Calf Press
-- Alternating Leg Raise
-- Lying Leg-Hip Raise
+- Standing Calf Raise
+- Cable Pallof Press
+- Dead Bug
+- Bird-Dog
+- RKC Plank
 
 **Back & Shoulders (Wednesday)**
 - Dumbbell Bent-Over Row
@@ -103,6 +105,8 @@ All exercises use Caliber plan names matched via the Garmin workout plan descrip
 - Dumbbell Shoulder Press
 - Dumbbell Lateral Raise
 - Dumbbell Shrug
+- Banded Face Pull
+- Machine Seated Reverse Fly
 
 **Chest & Arms (Friday)**
 - Dumbbell Bench Press
@@ -110,6 +114,9 @@ All exercises use Caliber plan names matched via the Garmin workout plan descrip
 - Dumbbell Floor Fly
 - Dumbbell Curl
 - Dumbbell Tricep Extension
+- Hollow Body Hold
+
+> **Retired exercises (data through 28 June 2026 only):** Kettlebell Goblet Squat, Machine Leg Extension, Alternating Leg Raise, Lying Leg-Hip Raise.
 
 ---
 

@@ -1,11 +1,28 @@
 ================================================================================
 GARMIN CONNECT ACTIVITY NOTES TEMPLATES
-Gym Workouts (Mar 2026) — format: reps@weight, reps@weight, reps@weight
-Bodyweight exercises: reps, reps, reps
+Synced to TRAINING_PLAN_V2.md v2.5 (revised 28 June 2026)
+Weighted exercises: reps@weight, reps@weight, reps@weight
+Bodyweight/unilateral exercises: reps, reps, reps (or reps@weight each side where noted)
+Timed holds: seconds, seconds, seconds
 ================================================================================
 
 ────────────────────────────────────────────────────────────────────────────────
-WORKOUT 1: BACK & SHOULDERS (Monday)
+WORKOUT 1: LEGS & ABS (Monday)
+────────────────────────────────────────────────────────────────────────────────
+Dumbbell Bench Glute Bridge: @, @, @
+Sled 45° Leg Press: @, @, @
+Dumbbell Step Up (each side): @, @, @
+Machine Seated Leg Curl: @, @, @
+Clamshells (each side, banded): , ,
+Machine Seated Calf Press: @, @, @
+Standing Calf Raise: , ,
+Cable Pallof Press (each side): @, @, @
+Dead Bug (each side): , ,
+Bird-Dog (each side): , ,
+RKC Plank (seconds): , ,
+
+────────────────────────────────────────────────────────────────────────────────
+WORKOUT 2: BACK & SHOULDERS (Wednesday)
 ────────────────────────────────────────────────────────────────────────────────
 Dumbbell Bent-Over Row: @, @, @
 Cable Seated Row: @, @, @
@@ -13,31 +30,21 @@ Cable Lat Pulldown: @, @, @
 Dumbbell Shoulder Press: @, @, @
 Dumbbell Lateral Raise: @, @, @
 Dumbbell Shrug: @, @, @
+Banded Face Pull: , ,
+Machine Seated Reverse Fly: @, @, @
 
 ────────────────────────────────────────────────────────────────────────────────
-WORKOUT 2: CHEST & ARMS (Tuesday)
+WORKOUT 3: CHEST & ARMS (Friday)
 ────────────────────────────────────────────────────────────────────────────────
 Dumbbell Bench Press: @, @, @
 Dumbbell Incline Bench Press: @, @, @
 Dumbbell Floor Fly: @, @, @
 Dumbbell Curl: @, @, @
 Dumbbell Tricep Extension: @, @, @
-
-────────────────────────────────────────────────────────────────────────────────
-WORKOUT 3: LEGS & ABS (Friday)
-────────────────────────────────────────────────────────────────────────────────
-Dumbbell Bench Glute Bridge: @, @, @
-Sled 45° Leg Press: @, @, @
-Kettlebell Goblet Squat: @, @, @
-Machine Leg Extension: @, @, @
-Cable Pallof Press: @, @, @
-Machine Seated Leg Curl: @, @, @
-Machine Seated Calf Press: @, @, @
-Alternating Leg Raise: , ,
-Lying Leg-Hip Raise: , ,
+Hollow Body Hold (seconds): , ,
 
 ================================================================================
-EXAMPLE COMPLETED SESSION (Back & Shoulders, 20 Apr 2026)
+EXAMPLE COMPLETED SESSION (Back & Shoulders)
 ================================================================================
 Dumbbell Bent-Over Row: 10@20, 10@20, 10@20
 Cable Seated Row: 10@23.5, 9@23.5, 8@23.5
@@ -45,6 +52,8 @@ Cable Lat Pulldown: 8@33, 6@47, 8@40
 Dumbbell Shoulder Press: 8@8, 9@6, 10@6
 Dumbbell Lateral Raise: 10@6, 10@6, 10@6
 Dumbbell Shrug: 10@18, 10@20, 10@20
+Banded Face Pull: 15, 14, 13
+Machine Seated Reverse Fly: 12@9, 12@9, 12@9
 
 ================================================================================
 HOW TO USE
@@ -52,11 +61,14 @@ HOW TO USE
 1. Complete your workout
 2. Open Garmin Connect (web or app) → find the activity → Edit
 3. Copy the relevant template above into the Description/Notes field
-4. Fill in your actual reps and weights (replace the @ placeholders)
+4. Fill in your actual reps and weights (replace the @ placeholders); for
+   bodyweight, timed, or unilateral exercises just fill in the blank fields
 5. Save — the next garmin_direct_sync cycle will pick up the notes and write
    the correct exercise names and weights to InfluxDB automatically
 
 Notes take priority over Garmin's built-in exercise tracking, so even if
 Garmin misnames an exercise, the notes version will be used in InfluxDB
 and the daily brief coaching analysis.
+
+Do not change this split before 29 August 2026 — see TRAINING_PLAN_V2.md.
 ================================================================================

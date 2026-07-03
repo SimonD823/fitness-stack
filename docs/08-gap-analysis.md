@@ -1,6 +1,6 @@
 # Guide 08 — Status & Gap Analysis
 
-Current status of all components as of June 2026 (Week 4 of 13), plus remaining items before the event.
+Current status of all components as of early July 2026 (Week 5 of 13), plus remaining items before the event.
 
 ---
 
@@ -15,7 +15,7 @@ Current status of all components as of June 2026 (Week 4 of 13), plus remaining 
 | Body battery change | ✅ | Calculated as high-low, matches watch display |
 | Strength sets with Caliber names | ✅ | Workout plan name mapping via associatedWorkoutId |
 | Exercise name normalisation | ✅ | `normalize_exercise()` in dashboard.py maps raw Garmin enums to Caliber plan names |
-| Cronometer nutrition sync | ✅ | 01:00 AM daily |
+| Cronometer nutrition sync | ✅ | 06:00 AM London daily |
 | Daily coaching email | ✅ | 08:00 AM BST, Ollama/Qwen3.6-27B, data freshness check |
 | Weekly training report | ✅ | Monday 07:00 AM UTC, Mon-Sun data, freshness check |
 | Step nudge email | ✅ | 18:00 UTC Mon-Sat, skips Sunday |
@@ -31,7 +31,6 @@ Current status of all components as of June 2026 (Week 4 of 13), plus remaining 
 | CoachNotes idempotent re-runs | ✅ | store_coach_note() deletes today's entries before writing — no duplicate notes |
 | InfluxDB backup | ✅ | Weekly Sunday 03:00, /share/backup/influxdb/, 4 weeks |
 | Grafana strength panels | ✅ | Scripted via API, 5 panel types |
-| Caliber sync | ✅ | Via Anthropic API (Haiku 4.5) + Caliber MCP, 01:00 AM |
 | Garmin sync days back fix | ✅ | SYNC_DAYS_BACK=1 now correctly syncs today only (range(days_back) not range(days_back+1)) |
 
 ---
@@ -75,8 +74,8 @@ The individual exercise panels use weekly grouping and only have data from April
 ### Ollama Cold Start
 First Ollama request after a reboot or idle period takes 30-60 seconds while the model loads into GPU memory. The daily brief has a 600-second timeout which handles this. Max must have auto-login configured and the Task Scheduler `OllamaAutoStart` job active.
 
-### Caliber Sync Auth
-The Caliber sync uses OAuth tokens tied to the Claude.ai account. If those tokens expire, the sync will fail silently. Monitor the CaliberStats database weekly — if no new workouts appear after a gym session, check the caliber-sync container logs.
+### Caliber MCP — Still Blocked, Not a "sync that sometimes fails"
+There is no scheduled `caliber-sync` container and no CaliberStats data pipeline. Caliber's Keycloak OAuth client (`caliber-mcp`) only accepts pre-registered redirect URIs, and Caliber support has not yet provided one — see `Caliber_MCP_Integration_Guide.md` for the full history and the support email template. Caliber data is only reachable interactively through the Claude.ai connector (session-bound, cannot be automated). Strength set/rep/weight detail is captured permanently via the Garmin route instead: `garmin-direct-sync` + workout plan name mapping → `GarminStats.StrengthSets`. This is not a temporary workaround pending Caliber MCP — treat it as the permanent path unless Caliber support resolves the redirect URI issue.
 
 ### Garmin Token Expiry
 Garmin OAuth tokens are stored in `/share/Container/garmin-direct-sync/tokens/garmin_tokens.json`. The token age check runs weekly and warns at 25 days. To renew: run `garmin_auth.py` on Max and copy the new tokens to the NAS.

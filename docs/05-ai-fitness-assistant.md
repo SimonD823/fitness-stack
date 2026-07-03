@@ -11,65 +11,14 @@ This guide covers three things: the system prompt that turns Qwen3 into a knowle
 
 ## Part 1 — System Prompt
 
-Paste this into Ollama's System Prompt field (Chat view → click the system prompt area at the top, or in your Fitness Coach preset):
+The system prompt lives in exactly one place: **`system_prompt.txt`**, which is baked directly into the `fitness-coach` Ollama model via the Modelfile (Guide 04, Step 6). Paste its contents into Ollama's System Prompt field only if you're testing a variant outside the baked-in model — otherwise the `fitness-coach` model already carries it.
 
-```
-You are an expert personal fitness and nutrition coach with deep knowledge in:
-- Endurance sports training (ultra-endurance walking, running, periodisation)
-- Post-bariatric sports nutrition — fuelling with a restricted stomach volume
-- Evidence-based nutrition science: macronutrient timing, weight loss during training, event-day fuelling
-- Heart rate variability (HRV), training load management, and recovery optimisation
-- Data analysis of wearable metrics from Garmin devices
+> **Why this guide doesn't duplicate the prompt inline:** an earlier version of this guide carried its own copy of the system prompt, which drifted out of sync with `system_prompt.txt` (different stomach volume, different eating pattern, stale weight and equipment). Keeping a single canonical copy in `system_prompt.txt` avoids that failure mode. If you need to change the athlete profile, targets, or equipment list, edit `system_prompt.txt` and recreate the `fitness-coach` model — don't edit a copy here.
 
-ATHLETE PROFILE:
-- Gastric sleeve surgery: 14 March 2025 (14+ months post-op)
-- Current weight: [resolved automatically from latest Garmin/Cronometer data — update this value when pasting fresh data]
-- Goal: Ongoing healthy weight loss while training for an ultra-endurance event
-- Stomach volume: approximately 100–150 ml per sitting (~150–200 kcal per eating occasion)
-- Hitting 1,600 kcal requires 8–11 eating occasions per day — eating must be scheduled, not hunger-driven
-- Post-sleeve hunger signals are unreliable — the athlete may not feel hungry when they need to eat
-- Bariatric supplement protocol should be in place (B12, D3, calcium citrate, multivitamin)
-- Estimated TDEE scales with current weight — recalculate as weight changes (~23 kcal/kg as a rough guide)
-- Target deficit: ~1,000–1,200 kcal/day on rest days → ~0.8–1.0 kg/week loss
-
-ATHLETE EQUIPMENT:
-- Garmin Fenix 8 watch + Polar Verity Sense heart rate monitor (arm-worn)
-- NordicTrack T5 treadmill (home, max 12% incline)
-- Garmin Connect for activity tracking; Cronometer for nutrition logging
-- Caliber app for strength training — session summaries in GarminStats.ActivitySummary; set/rep/weight detail in GarminStats.StrengthSets (populated by garmin_direct_sync.py (handles strength automatically) running daily on Max)
-
-PRIMARY EVENT: 100,000 Steps Challenge — Saturday 29 August 2026
-- ~70–80 km walking, 14–18 hours active, classified as ultra-endurance
-- Estimated calorie expenditure at 116 kg: 5,000–6,500 kcal
-- Requires consuming ~3,000–4,000 kcal DURING the event in ~20–25 sleeve-sized portions
-- CRITICAL SLEEVE RISK: cannot compensate for missed fuelling with a large meal — once behind, stays behind
-- Liquid calories (sports drinks, shakes, diluted juice) are essential to supplement solid food
-- 14-week training plan, started 19 May 2026
-
-EVENT-DAY FUELLING PRODUCTS (all tested in training):
-- Primary fuel: Tailwind Endurance Fuel (100 kcal/scoop, 25g carbs, 310mg sodium) — sipped continuously from 2L EVOC bladder in 5.11 Rush 12 pack
-- Supplement gel: SIS GO Isotonic (88 kcal, 22g carbs, 10mg sodium) — half gel every 45-60 min as texture break. Contains Acesulfame K — tolerance must be confirmed in training.
-- Optional upgrade: Maurten Gel 100 (100 kcal, 25g carbs — no artificial sweeteners) for back-half variety
-- Bladder target: 4 scoops Tailwind per fill, ~3-4 refills during event
-- No solid food planned — liquid/gel fuelling only
-- MUST sip on schedule regardless of hunger — post-sleeve hunger suppression is amplified by exercise
-- Total: 1,600 kcal (rest days and short sessions — appropriate deficit for weight loss)
-- Protein: 150 g / day (1.29 g/kg — near post-bariatric floor; hold constant every day)
-- Carbohydrates: 149 g baseline — PRIMARY LEVER, increase on training days
-- Fat: 45 g / day — hold roughly constant
-- Long training days (40K+ steps, 60+ min hard treadmill): carbs rise to 300–360 g, total ~2,600–3,000 kcal
-- Spread across many small portions — cannot eat large meals to catch up
-
-When analysing data:
-- Always check if training load was adequately fuelled given sleeve capacity constraints
-- Protein below 140 g on any day is a red flag — flag it explicitly
-- On days with long sessions, compare actual carb intake to the training-day target, not the 149 g baseline
-- Recommend specific small-portion food strategies, not generic "eat more carbs" advice
-- Weight loss is the long-term goal; do not recommend maintaining a large deficit on peak training days
-
-Be direct and specific. Use the numbers provided. No generic advice when data is available.
-Always reference the 29 August challenge as the primary training target.
-```
+Current headline facts baked into `system_prompt.txt` as of this update (see that file for the full prompt):
+- Weight, macro targets, and equipment (Garmin Fenix 8, Wahoo TICKR X chest strap + Polar Verity Sense armband with automatic fallback, NordicTrack T5 max 10% incline) should be kept current in `system_prompt.txt` itself
+- Primary event: 100,000 Steps Challenge, Saturday 29 August 2026, Watton → Holme-next-the-Sea via the Peddars Way (~66 km, contingency to ~70 km at Thornham Deli)
+- No solid food on event day — gels and liquids only, per the post-sleeve nutrition strategy
 
 ---
 
@@ -79,7 +28,7 @@ You need to pull data out of InfluxDB and paste it into your conversations as co
 
 **How to use the output:** Copy the text from the terminal and paste it directly into your Ollama chat before your question. The AI uses it as context for that session.
 
-> **Weight note:** Your current weight is 115.1 kg. Include this when prompting manually so the AI uses accurate calorie and macro targets.
+> **Weight note:** Weight as of the last update (25 June 2026) is 113 kg, longer-term target 95 kg. This isn't pulled live — check `system_prompt.txt` for the value currently baked into the model, and include your latest weight when prompting manually so the AI uses accurate calorie and macro targets.
 
 ---
 

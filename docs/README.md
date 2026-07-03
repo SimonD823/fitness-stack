@@ -2,7 +2,7 @@
 
 A fully self-hosted fitness intelligence platform combining Garmin wearable data, strength training tracking, nutrition monitoring, a local LLM, and automated daily coaching emails — all running on your own hardware with no cloud dependency after setup.
 
-**Primary goal:** 100,000 Steps Challenge — Saturday 29 August 2026 (~70–80 km).
+**Primary goal:** 100,000 Steps Challenge — Saturday 29 August 2026. Route: Watton to Holme-next-the-Sea via the Peddars Way (~66 km), with a contingency extension east to Thornham Deli (~70 km) if the step count at Holme falls short of 100,000.
 
 ---
 
@@ -16,17 +16,18 @@ Remote (iPhone/iPad)
             └── NAS (192.168.1.60) — always on
                   ├── InfluxDB :8086        ← all health + training data
                   ├── Grafana :3000         ← dashboards + strength panels
-                  ├── garmin-direct-sync    ← Garmin Connect → InfluxDB (every 30 min)
-                  ├── cronometer-sync       ← nutrition → InfluxDB (01:00 AM daily)
+                  ├── garmin-direct-sync    ← Garmin Connect → InfluxDB (every 30 min, incl. strength sets)
+                  ├── cronometer-sync       ← nutrition → InfluxDB (06:00 AM London daily)
                   ├── daily-brief           ← coaching emails (08:00 AM + Mon 07:00 AM)
                   ├── open-webui :3001      ← chat UI → Ollama on Max
-                  ├── training-dashboard :3002 ← planned vs actual training view
-                  └── caliber-sync          ← Caliber → InfluxDB (01:00 AM daily)
+                  └── training-dashboard :3002 ← planned vs actual training view
                                                     │
                                             Max (192.168.1.50) — auto-starts on boot
                                             └── Ollama :11434
                                                 └── fitness-coach (Qwen3.6-27B Q6_K)
 ```
+
+> **No `caliber-sync` container.** Caliber's MCP OAuth flow is still blocked pending a registered redirect URI from Caliber support (see `Caliber_MCP_Integration_Guide.md`). Caliber data is reachable only interactively via the Claude.ai connector — it can't be run on a schedule. Strength set/rep/weight detail comes exclusively from `garmin-direct-sync`.
 
 ---
 
@@ -59,6 +60,8 @@ Copy each folder's `docker-compose.yml` to `\\nas\Container\<folder-name>\` via 
 - `open-webui/docker-compose.yml`
 - `training-dashboard/docker-compose.yml`
 
+(There is no `caliber-sync` folder to deploy — see the architecture note above.)
+
 ### 3. First-time Garmin authentication
 
 ```powershell
@@ -86,17 +89,16 @@ python garmin_auth.py
 
 ## Containers & Applications
 
-The stack runs as 6 Container Station applications (7 containers total):
+The stack runs as 5 Container Station applications (6 containers total):
 
 | Application | Container(s) | Schedule | Purpose |
 |-------------|-------------|----------|---------|
 | `fitness-stack` | `influxdb` + `grafana` | Always on | Core data stack — InfluxDB :8086 + Grafana :3000 |
-| `garmin-direct-sync` | `garmin-direct-sync` | Every 30 min | Garmin Connect → InfluxDB (GarminStats) |
-| `cronometer-sync` | `cronometer-sync` | 01:00 AM daily | Cronometer → InfluxDB (CronometerStats) |
+| `garmin-direct-sync` | `garmin-direct-sync` | Every 30 min | Garmin Connect → InfluxDB (GarminStats, incl. StrengthSets) |
+| `cronometer-sync` | `cronometer-sync` | 06:00 AM London daily | Cronometer → InfluxDB (CronometerStats) |
 | `daily-brief` | `daily-brief` | 08:00 AM daily + Mon 07:00 AM | Daily coaching email + weekly training report |
 | `open-webui` | `open-webui` | Always on | Web chat UI → Ollama on Max |
 | `training-dashboard` | `training-dashboard` | Always on | Planned vs actual training view :3002 |
-| `caliber-sync` | `caliber-sync` | 01:00 AM daily | Caliber → InfluxDB via Anthropic API |
 
 ---
 
@@ -161,17 +163,19 @@ The `garmin-direct-sync` script automatically reads the Garmin workout plan desc
 
 ---
 
-## Weekly Structure (13-week plan from 1 June 2026)
+## Weekly Structure (13-week plan from 1 June 2026, v2.5 split)
 
 | Day | Session |
 |-----|---------|
 | Monday | Caliber: Legs & Abs + short walk (~5,000 steps) |
-| Tuesday | Long Zone 2 walk (treadmill or outdoor, 70+ min, ~8,000 steps) |
+| Tuesday | VO₂ max outdoor GPS walk (20 min, standalone morning session) + separate Zone 2 treadmill walk later — ~9,000–10,000 steps combined |
 | Wednesday | Caliber: Back & Shoulders + short walk |
-| Thursday | Long Zone 2 walk (treadmill or outdoor, 70+ min, ~8,000 steps) |
+| Thursday | VO₂ max outdoor GPS walk (20 min, standalone morning session) + separate Zone 2 treadmill walk later — ~9,000–10,000 steps combined |
 | Friday | Caliber: Chest & Arms + short walk |
 | Saturday | Primary long walk (progressively increasing to 4+ hours) |
 | Sunday | Rest |
+
+No changes to this split before 29 August 2026 — see `TRAINING_PLAN_V2.md`.
 
 ---
 
