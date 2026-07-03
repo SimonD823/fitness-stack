@@ -125,7 +125,47 @@ Strength sessions recorded on Fenix 8 using Garmin workout plan templates:
 
 The `garmin-direct-sync` container reads the `associatedWorkoutId` from each activity, fetches the Garmin workout plan, and maps Garmin exercise codes (e.g. `SUSPENSION GLUTE_BRIDGE`) to Caliber names (e.g. `Dumbbell Bench Glute Bridge`).
 
+`dashboard.py` additionally normalises any raw Garmin enum names (e.g. `ROW BENT_OVER_ROW_WITH_DUMBBELL`) to canonical Caliber plan names via the `normalize_exercise()` function, so day cards, modals, and Actual-vs-Plan matching all use consistent names regardless of data source.
+
 Grafana strength progression panels visualise exercise weights over time — see `grafana_strength_panels.md`.
+
+---
+
+## Training Dashboard (:3002) — Key Behaviours
+
+The Flask training dashboard at `http://nas:3002` shows planned vs actual sessions for the current week with click-to-expand modals. Key implementation details:
+
+**InfluxDB query windows by data type:**
+
+| Measurement | Window used | Reason |
+|-------------|-------------|--------|
+| DailyStats, ActivitySummary, StrengthSets, CoachNotes | `07:00Z today → 07:00Z tomorrow` | Synced during the day |
+| SleepSummary / HRV | `20:00Z previous day → 07:00Z tomorrow` | Garmin writes sleep at ~21:00Z previous night |
+| BodyComposition | `00:00Z today → 00:00Z tomorrow` | Garmin writes at midnight UTC |
+
+**Exercise name normalisation:** `normalize_exercise()` maps raw Garmin enums to Caliber plan names. Unknown exercises are title-cased rather than shown as ALL_CAPS_UNDERSCORED.
+
+**Coach Override integration:** The dashboard reads `CoachNotes` from InfluxDB and surfaces today's coaching decision on the day card (amber badges) and in the modal (coloured pill badges + italic note text). Structured fields (`caliber_cancelled`, `vo2_cancelled`, `walk_cap_mins`, `step_cap`, `readiness_class`) are written by `daily_brief.py` and read by the dashboard — no free-text parsing required.
+
+**Walk modal:** Shows target steps + target duration (from plan), plus actual steps + actual duration from logged Garmin session if available.
+
+---
+
+## CoachNotes — Structured Override Fields
+
+`daily_brief.py` writes to the `CoachNotes` InfluxDB measurement each morning. Fields written:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `note` | string | Human-readable coaching decision (free text) |
+| `date` | string | e.g. `Monday 22 June 2026` |
+| `readiness_class` | string | `Fully recovered` / `Partially recovered` / `Suppressed` / `Red-flag (do not train)` |
+| `caliber_cancelled` | int | `1` if Caliber cancelled today, `0` otherwise |
+| `vo2_cancelled` | int | `1` if VO₂ Max session cancelled today, `0` otherwise |
+| `walk_cap_mins` | int | Walk duration cap in minutes (`-1` = not applicable) |
+| `step_cap` | int | Step ceiling for today (`-1` = not applicable) |
+
+**Re-run behaviour:** `store_coach_note()` deletes all existing `CoachNotes` entries for the current calendar day before writing, so running the daily brief multiple times never leaves conflicting notes. Only the most recent run's note persists.
 
 ---
 

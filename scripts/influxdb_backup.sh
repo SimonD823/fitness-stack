@@ -7,7 +7,7 @@
 # ── Configuration ─────────────────────────────────────────────────────────────
 
 INFLUX_CONTAINER="influxdb"
-BACKUP_ROOT="/share/Backup/influxdb"
+BACKUP_ROOT="/share/backup/influxdb"
 DATABASES=("GarminStats" "CronometerStats")
 KEEP_WEEKS=4
 

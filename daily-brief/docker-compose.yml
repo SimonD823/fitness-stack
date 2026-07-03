@@ -10,6 +10,7 @@ services:
       INFLUX_USER: "${INFLUX_USER}"
       INFLUX_PASS: "${INFLUX_PASS}"
       LM_STUDIO_URL: "http://${MAX_HOST}:1234"
+      OLLAMA_URL: "http://${MAX_HOST}:11434"      
       LM_MODEL: "${LM_MODEL}"
       BREVO_API_KEY: "${BREVO_API_KEY}"
       EMAIL_FROM: "${EMAIL_FROM}"
@@ -21,6 +22,8 @@ services:
     volumes:
       - /share/Container/daily-brief/daily_brief.py:/app/daily_brief.py
       - /share/Container/daily-brief/TRAINING_PLAN_V2.md:/app/TRAINING_PLAN_V2.md
+      - /share/Container/daily-brief/athlete_notes.txt:/app/athlete_notes.txt
+      - /var/run/docker.sock:/var/run/docker.sock
     network_mode: host
     command: >
       bash -c "pip install --no-cache-dir requests influxdb --quiet &&

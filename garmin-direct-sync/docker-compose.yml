@@ -5,16 +5,16 @@ services:
     container_name: garmin-direct-sync
     restart: unless-stopped
     environment:
-      GARMIN_EMAIL: "${GARMIN_EMAIL}"
+      GARMIN_EMAIL: ""
       GARMIN_PASSWORD: ""
-      GARMIN_DISPLAY_NAME: "${GARMIN_DISPLAY_NAME}"
-      INFLUX_HOST: "${NAS_HOST}"
-      INFLUX_PORT: "${INFLUX_PORT}"
+      GARMIN_DISPLAY_NAME: ""
+      INFLUX_HOST: ""
+      INFLUX_PORT: "8086"
       INFLUX_DB: "GarminStats"
-      INFLUX_USER: "${INFLUX_USER}"
-      INFLUX_PASS: "${INFLUX_PASS}"
+      INFLUX_USER: "influxdb_user"
+      INFLUX_PASS: "influxdb_secret_password"
       SYNC_DAYS_BACK: "1"
-      SYNC_INTERVAL_SECONDS: "1800"
+      SYNC_INTERVAL_SECONDS: "900"
       TOKEN_DIR: "/app/tokens"
     volumes:
       - /share/Container/garmin-direct-sync/garmin_direct_sync.py:/app/garmin_direct_sync.py

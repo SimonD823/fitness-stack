@@ -34,21 +34,22 @@ from influxdb import InfluxDBClient
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-GARMIN_EMAIL     = os.environ.get("GARMIN_EMAIL", "your_email@example.com")
+GARMIN_EMAIL     = os.environ.get("GARMIN_EMAIL", "")
 GARMIN_PASSWORD  = os.environ.get("GARMIN_PASSWORD", "")
 TOKEN_DIR        = os.environ.get("TOKEN_DIR", "/app/tokens")
 
-INFLUX_HOST      = os.environ.get("INFLUX_HOST", "NAS_IP")
+INFLUX_HOST      = os.environ.get("INFLUX_HOST", "192.168.1.60")
 INFLUX_PORT      = int(os.environ.get("INFLUX_PORT", "8086"))
 INFLUX_DB        = os.environ.get("INFLUX_DB", "GarminStats")
 INFLUX_USER      = os.environ.get("INFLUX_USER", "influxdb_user")
-INFLUX_PASS      = os.environ.get("INFLUX_PASS", "YOUR_INFLUX_PASSWORD")
+INFLUX_PASS      = os.environ.get("INFLUX_PASS", "influxdb_secret_password")
 
 SYNC_DAYS_BACK   = int(os.environ.get("SYNC_DAYS_BACK", "1"))
 SYNC_INTERVAL    = int(os.environ.get("SYNC_INTERVAL_SECONDS", "1800"))  # 30 min
+BACKFILL_DAYS    = int(os.environ.get("BACKFILL_DAYS", "0"))  # 0 = no backfill
 
 DEVICE_NAME      = "fenix 8 - 51mm, AMOLED"
-GARMIN_DISPLAY_NAME = os.environ.get("GARMIN_DISPLAY_NAME", "YOUR_GARMIN_DISPLAY_NAME")
+GARMIN_DISPLAY_NAME = os.environ.get("GARMIN_DISPLAY_NAME", "")
 DB_NAME          = "GarminStats"
 
 # Activity types to fetch set detail for
@@ -528,6 +529,44 @@ def get_workout_name_map(garmin, act_id):
         log.debug(f"Could not load workout plan for activity {act_id}: {e}")
         return {}
 
+def delete_strength_sets_for_activity(influx, act_id, db="GarminStats"):
+    """Delete all StrengthSets for a given activity_id before rewriting.
+    This ensures updated Garmin Connect data always overwrites stale records.
+    """
+    try:
+        # InfluxDB 1.x supports DELETE with tag filter
+        q = f"DELETE FROM StrengthSets WHERE \"activity_id\" = \'{act_id}\'"
+        influx.query(q, database=db)
+        log.debug(f"  Deleted existing StrengthSets for activity {act_id}")
+    except Exception as e:
+        log.debug(f"  Could not delete StrengthSets for {act_id}: {e}")
+
+
+def delete_activity_summary_for_activity(influx, act_id, db="GarminStats"):
+    """Delete all ActivitySummary rows for a given Activity_ID before re-writing.
+
+    Activity_ID is stored as a field (not a tag) so we can't use a simple
+    tag-based DELETE. Instead we query for matching rows, find their timestamps,
+    and delete by exact time.
+    """
+    try:
+        rs = influx.query(
+            f'SELECT "Activity_ID" FROM "ActivitySummary" WHERE "Activity_ID" = {int(act_id)}',
+            database=db,
+        )
+        points = list(rs.get_points())
+        for p in points:
+            t = p["time"]
+            influx.query(
+                f'DELETE FROM "ActivitySummary" WHERE time = \'{t}\'',
+                database=db,
+            )
+        if points:
+            log.debug(f"  Deleted {len(points)} existing ActivitySummary row(s) for activity {act_id}")
+    except Exception as e:
+        log.debug(f"  Could not delete ActivitySummary for {act_id}: {e}")
+
+
 def sync_activities(garmin, influx, date):
     """Sync activities → ActivitySummary + StrengthSets."""
     try:
@@ -549,19 +588,54 @@ def sync_activities(garmin, influx, date):
             except (ValueError, AttributeError):
                 continue
 
-            # Fetch activity details for step count
+            # Fetch activity details for step count.
+            # Garmin doesn't expose a totalSteps field in the activity API for
+            # treadmill/walking activities. Instead, steps are derived from
+            # cadence (stepsPerMinute) × duration across laps, which matches
+            # what the watch displays.
             activity_steps = 0
             try:
                 time.sleep(0.3)
-                details = garmin.get_activity_details(act_id)
-                if isinstance(details, dict):
-                    # Steps in activity details
-                    activity_steps = int(
-                        details.get("summaryDTO", {}).get("steps") or
-                        details.get("steps") or 0
-                    )
+
+                # Primary method: sum cadence × duration across all laps
+                splits = garmin.get_activity_splits(act_id)
+                if isinstance(splits, dict):
+                    laps = splits.get("lapDTOs", [])
+                    lap_steps = 0
+                    for lap in laps:
+                        cadence = float(lap.get("averageRunCadence") or
+                                        lap.get("averageCadence") or 0)
+                        duration_s = float(lap.get("movingDuration") or
+                                           lap.get("elapsedDuration") or 0)
+                        if cadence and duration_s:
+                            # cadence is steps/min, duration is seconds
+                            lap_steps += int(cadence * duration_s / 60)
+                    if lap_steps:
+                        activity_steps = lap_steps
+                        log.debug(f"  Steps for {act_id} ({act_type}): "
+                                  f"{activity_steps} (from {len(laps)} laps)")
+
+                # Fallback: summaryDTO.steps or top-level steps
+                if not activity_steps:
+                    details = garmin.get_activity_details(act_id)
+                    if isinstance(details, dict):
+                        summary = details.get("summaryDTO", {})
+                        activity_steps = int(
+                            summary.get("steps") or
+                            summary.get("totalSteps") or
+                            details.get("steps") or
+                            details.get("totalSteps") or 0
+                        )
+
+                if not activity_steps:
+                    log.debug(f"  No steps found for {act_id} ({act_type})")
+
             except Exception as e:
-                log.debug(f"Could not get activity details for {act_id}: {e}")
+                log.debug(f"Could not get steps for {act_id}: {e}")
+
+            # Delete any existing ActivitySummary rows for this activity before writing
+            if act_id:
+                delete_activity_summary_for_activity(influx, act_id)
 
             act_points.append({
                 "measurement": "ActivitySummary",
@@ -659,7 +733,10 @@ def sync_activities(garmin, influx, date):
                         })
 
                     if set_num:
-                        log.info(f"  StrengthSets: {set_num} sets for '{act_name}'")
+                        # Delete existing records for this activity before writing
+                        # This ensures Garmin Connect updates always overwrite stale data
+                        delete_strength_sets_for_activity(influx, act_id)
+                        log.info(f"  StrengthSets: {set_num} sets for '{act_name}' (overwrite mode)")
                 except Exception as e:
                     log.warning(f"  StrengthSets failed for {act_id}: {e}")
 
@@ -667,7 +744,10 @@ def sync_activities(garmin, influx, date):
         if act_points:
             names = [p["fields"]["activityName"] for p in act_points]
             log.info(f"  ActivitySummary: {names}")
-        write(influx, set_points)
+        # set_points are written per-activity inside the loop after delete
+        # This final write handles any remaining set_points
+        if set_points:
+            write(influx, set_points)
 
     except Exception as e:
         log.warning(f"  Activities failed: {e}")
@@ -697,7 +777,8 @@ def sync_device(garmin, influx):
 
 def run_sync(garmin, influx, days_back):
     today = datetime.now(timezone.utc).date()
-    dates = [today - timedelta(days=i) for i in range(days_back + 1)]
+    # days_back=1 → today only, days_back=2 → today + yesterday, etc.
+    dates = [today - timedelta(days=i) for i in range(days_back)]
 
     log.info(f"Syncing {len(dates)} day(s): {dates[-1]} → {dates[0]}")
     sync_device(garmin, influx)
@@ -710,27 +791,40 @@ def run_sync(garmin, influx, days_back):
         sync_stress(garmin, influx, date)
         sync_breathing(garmin, influx, date)
         sync_sleep(garmin, influx, date)
-        sync_hrv(garmin, influx, date)   # runs after sleep so HRV overwrites sleep's 0 value
+        sync_hrv(garmin, influx, date)
         sync_body_composition(garmin, influx, date)
         sync_activities(garmin, influx, date)
-        time.sleep(2)  # be polite to Garmin API
+        time.sleep(2)
 
 
 def main():
     log.info("=" * 60)
     log.info("Garmin Direct Sync Starting")
     log.info(f"Sync interval: {SYNC_INTERVAL}s  Days back: {SYNC_DAYS_BACK}")
+    if BACKFILL_DAYS:
+        log.info(f"Backfill mode: {BACKFILL_DAYS} days (activities only, for step count resync)")
     log.info("=" * 60)
 
     garmin = get_garmin_client()
     influx = get_influx()
+
+    # One-time backfill of activity step counts if BACKFILL_DAYS is set.
+    # Only runs sync_activities (not full sync) to avoid hammering the API.
+    if BACKFILL_DAYS:
+        today = datetime.now(timezone.utc).date()
+        dates = [today - timedelta(days=i) for i in range(BACKFILL_DAYS + 1)]
+        log.info(f"Starting backfill: {dates[-1]} → {dates[0]}")
+        for date in dates:
+            log.info(f"── Backfill {date} ──")
+            sync_activities(garmin, influx, date)
+            time.sleep(3)  # extra polite during backfill
+        log.info("Backfill complete — resuming normal sync loop")
 
     while True:
         try:
             run_sync(garmin, influx, SYNC_DAYS_BACK)
         except (GarminConnectConnectionError, Exception) as e:
             log.error(f"Sync failed: {e}")
-            # Refresh client on connection errors
             try:
                 garmin = get_garmin_client()
             except Exception:

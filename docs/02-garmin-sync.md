@@ -29,10 +29,24 @@ This guide sets up `garmin-direct-sync` — a Python-based container that pulls 
 | `HRV_Intraday` | Overnight HRV readings (populates after sleep) |
 | `BreathingRateIntraday` | Respiration rate (populates after sleep) |
 | `SleepSummary` | Duration, stages (deep/light/REM/awake), score, overnight HRV |
-| `BodyComposition` | Weight in grams (divide by 1000 for kg in Grafana) |
+| `BodyComposition` | Weight in grams at midnight UTC (divide by 1000 for kg) |
 | `ActivitySummary` | All activity types with HR zones, calories, training load |
 | `StrengthSets` | Per-set exercise detail: name, reps, weight (kg), volume (kg) |
 | `DeviceSync` | Sync timestamp |
+
+---
+
+## InfluxDB Timestamp Patterns
+
+Different Garmin measurements land at different timestamps — important for dashboard query windows:
+
+| Measurement | Timestamp stored | Query window to use |
+|-------------|-----------------|---------------------|
+| DailyStats, ActivitySummary, StrengthSets | During the day (varies) | `07:00Z today → 07:00Z tomorrow` |
+| SleepSummary, HRV | ~21:00–22:00Z previous night | `20:00Z previous day → 07:00Z tomorrow` |
+| BodyComposition | `00:00:00Z` exactly (midnight UTC) | `00:00Z today → 00:00Z tomorrow` |
+
+> **Important:** The `00:00:00Z` entries in SleepSummary are zero-value placeholder rows — filter them with `AND avgOvernightHrv > 0 AND sleepTimeSeconds > 3600`.
 
 ---
 
@@ -60,8 +74,6 @@ Verify the script copied correctly — it must be a text file not a directory:
 wc -l /share/Container/garmin-direct-sync/garmin_direct_sync.py
 head -3 /share/Container/garmin-direct-sync/garmin_direct_sync.py
 ```
-
-Expected output: ~620 lines, first line `#!/usr/bin/env python3`
 
 ---
 
@@ -176,25 +188,20 @@ services:
 
 > **GARMIN_DISPLAY_NAME** — your Garmin Connect profile display name, visible at `https://connect.garmin.com/app/profile/YOUR_GARMIN_DISPLAY_NAME`. Required for DailyStats, HeartRate, and Steps API calls.
 
-The container pulls `python:3.12-slim`, installs `garminconnect` and `influxdb` (~30 seconds), loads the saved token, and starts syncing.
+---
 
-Watch the **Logs** tab — you should see:
+## SYNC_DAYS_BACK Semantics
 
-```
-Garmin Direct Sync Starting
-Sync interval: 1800s  Days back: 1
-── 2026-05-24 ──────────────────────────────────
-  DailyStats: 7,474 steps
-  HeartRateIntraday: 461 points
-  StepsIntraday: 30 points
-  StressIntraday: 213 pts  BodyBatteryIntraday: 308 pts
-  HRV_Intraday: 0 points  (populates overnight)
-  BreathingRateIntraday: 0 points  (populates overnight)
-  SleepSummary: 7.0h, score=49
-  BodyComposition: 115.3 kg
-  ActivitySummary: ['Treadmill Running']
-Sleeping 1800s until next sync...
-```
+The `SYNC_DAYS_BACK` environment variable controls how many days are synced per cycle:
+
+| Value | Days synced | Use case |
+|-------|-------------|----------|
+| `1` | Today only | Normal ongoing sync (default) |
+| `2` | Today + yesterday | Catch up after a missed sync |
+| `7` | Today + last 6 days | Short backfill |
+| `143` | Full history to 1 Jan 2026 | Initial historical backfill |
+
+> **Note:** `SYNC_DAYS_BACK=1` syncs **today only**. The script uses `range(days_back)` internally, so the value is not incremented. `BACKFILL_DAYS` uses the same semantics.
 
 ---
 
@@ -228,12 +235,22 @@ http://NAS_IP:8086/query?u=admin&p=YOUR_INFLUX_ADMIN_PASSWORD&db=GarminStats&q=S
 http://NAS_IP:8086/query?u=admin&p=YOUR_INFLUX_ADMIN_PASSWORD&db=GarminStats&q=SELECT%20%22exercise%22%2C%22reps%22%2C%22weight_kg%22%20FROM%20%22StrengthSets%22%20ORDER%20BY%20time%20DESC%20LIMIT%2020
 ```
 
+**Sleep data (check timestamps):**
+```
+http://NAS_IP:8086/query?u=admin&p=YOUR_INFLUX_ADMIN_PASSWORD&db=GarminStats&q=SELECT+time,sleepTimeSeconds,avgOvernightHrv,sleepScore+FROM+SleepSummary+ORDER+BY+time+DESC+LIMIT+5
+```
+
+**Body composition (stored at midnight UTC):**
+```
+http://NAS_IP:8086/query?u=admin&p=YOUR_INFLUX_ADMIN_PASSWORD&db=GarminStats&q=SELECT+time,weight+FROM+BodyComposition+ORDER+BY+time+DESC+LIMIT+5
+```
+
 ---
 
 ## Troubleshooting
 
 **Container starts but immediately exits:**
-Check the Logs tab. Most likely the script file is missing or is a directory. Verify with `wc -l /share/Container/garmin-direct-sync/garmin_direct_sync.py` — should return ~620.
+Check the Logs tab. Most likely the script file is missing or is a directory. Verify with `wc -l /share/Container/garmin-direct-sync/garmin_direct_sync.py`.
 
 **"No password set and no cached tokens":**
 The `garmin_tokens.json` file is missing from the tokens folder. Repeat Step 4.
@@ -249,6 +266,9 @@ These only populate from overnight sleep data. They will show non-zero values th
 
 **StrengthSets empty after a strength session:**
 The session must be recorded as a structured workout on the Fenix 8. If the activity appears in ActivitySummary but StrengthSets is empty, the watch recording didn't include structured set data for that session.
+
+**Sync covers more days than expected:**
+Check `SYNC_DAYS_BACK` in the compose YAML. `1` = today only. The script uses `range(days_back)` — the value is not incremented internally.
 
 ---
 
@@ -267,9 +287,11 @@ When garmin-direct-sync processes a strength activity, it automatically fetches 
 4. Garmin's own exercise key (`SUSPENSION GLUTE_BRIDGE`) is replaced with this description
 5. If no workout plan is associated, the Garmin category+exercise key is used as fallback
 
+The training dashboard (`dashboard.py`) additionally applies `normalize_exercise()` at read time, which maps any remaining raw Garmin enum names to canonical Caliber plan names. This covers cases where the workout plan mapping didn't fire or data was written before the mapping was in place.
+
 **Setting up workout plans in Garmin Connect:**
 1. Go to `connect.garmin.com` → Training → Workouts
-2. Create three workouts matching the Caliber March 2026 plan:
+2. Create three workouts matching the Caliber plan:
    - `(Gym) Back & Shoulders`
    - `(Gym) Chest & Arms`
    - `(Gym) Legs & Abs`
@@ -283,7 +305,6 @@ When garmin-direct-sync processes a strength activity, it automatically fetches 
 If StrengthSets contains incorrect data, delete and resync:
 
 ```bash
-# Delete a specific day
 curl -s -X POST "http://NAS_IP:8086/query?u=admin&p=YOUR_INFLUX_ADMIN_PASSWORD&db=GarminStats" \
   --data-urlencode "q=DELETE FROM StrengthSets WHERE time >= '2026-04-26T00:00:00Z' AND time < '2026-04-27T00:00:00Z'"
 ```
