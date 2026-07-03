@@ -42,3 +42,9 @@ backup/
 # Generated files
 fitness_context.txt
 caliber_workouts.json
+
+# Container locations
+cronometer-sync
+daily-brief
+garmin-direct-sync
+open-webui
