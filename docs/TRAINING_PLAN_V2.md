@@ -1,5 +1,6 @@
 # 13-Week Training Plan — 100,000 Steps Challenge
 ## Start: Monday 1 June 2026 | Event: Saturday 29 August 2026
+## Version: 2.5 | Updated: 28 June 2026
 
 ---
 
@@ -7,8 +8,8 @@
 
 This plan builds aerobic base through progressive treadmill and outdoor walking, with three weekly Caliber gym sessions for muscular support. The AI coaching brief adapts each day's session based on previous day's HRV, sleep, and body battery. Saturday is the primary long session day, ramping from 90 minutes to 4+ hours before a 2-week taper.
 
-**Zone 2 target:** 98-115 bpm (Garmin alerts at 116 bpm slow down, 125 bpm take a break)
-**Pace:** 4.6-4.8 km/h on treadmill; outdoor pace will vary with terrain
+**Zone 2 target:** 98–115 bpm (Garmin alerts at 116 bpm = slow down, 125 bpm = take a break)  
+**Pace:** 4.6–4.8 km/h on treadmill; outdoor pace varies with terrain
 
 ---
 
@@ -16,15 +17,36 @@ This plan builds aerobic base through progressive treadmill and outdoor walking,
 
 | Day | Type | Session | Target Steps (activity) |
 |-----|------|---------|------------------------|
-| Monday | Caliber: Legs & Abs + short walk | Gym — strength + 40-45 min walk | ~5,000 |
-| Tuesday | Long treadmill/outdoor walk | 70 min Zone 2 | ~8,000 |
-| Wednesday | Caliber: Back & Shoulders + short walk | Gym — strength + 40-45 min walk | ~5,000 |
-| Thursday | Long treadmill/outdoor walk | 70 min Zone 2 | ~8,000 |
-| Friday | Caliber: Chest & Arms + short walk | Gym — strength + 40-45 min walk | ~5,000 |
+| Monday | Caliber: Legs & Abs + short walk | Gym — strength + 40–45 min walk | ~5,000 |
+| Tuesday | VO₂ max walk (morning) + Zone 2 walk (afternoon/evening) | **Split sessions** — outdoor GPS walk (morning, standalone) → treadmill Zone 2 walk (hours later, separate session) | ~9,000–10,000 |
+| Wednesday | Caliber: Back & Shoulders + short walk | Gym — strength + 40–45 min walk | ~5,000 |
+| Thursday | VO₂ max walk (morning) + Zone 2 walk (afternoon/evening) | **Split sessions** — outdoor GPS walk (morning, standalone) → treadmill Zone 2 walk (hours later, separate session) | ~9,000–10,000 |
+| Friday | Caliber: Chest & Arms + short walk | Gym — strength + 40–45 min walk | ~5,000 |
 | Saturday | Primary long walk | Progressive — see plan below | Increasing |
 | Sunday | Rest | AI-guided recovery | Minimal |
 
-**Daily step target (total inc. general walking):** 15,000-16,000 steps
+**Daily step target (total inc. general walking):** 15,000–16,000 steps
+
+---
+
+## VO₂ Max Walk Protocol (Tuesday & Thursday — morning session, outdoors only)
+
+These 20-minute structured walks are done **outdoors with GPS active** as a standalone morning session on Tuesday and Thursday. They signal Garmin's VO₂ Max algorithm through the combination of GPS pace, elevated HR, and consistent effort — improving Garmin Fitness Age without adding meaningful recovery cost.
+
+**These are separate sessions from the Zone 2 treadmill walk.** The VO₂ Max walk is completed in the morning; the Zone 2 treadmill walk follows hours later as a distinct, independent session. They are not back-to-back. Recovery time between sessions is part of the design.
+
+| Phase | Duration | HR Target | Notes |
+|-------|----------|-----------|-------|
+| Warm-up | 3 min | 95–105 bpm | Easy pace, let stride settle |
+| Main block | 12 min | 118–130 bpm | Brisk purposeful walk — "late for something" pace |
+| Finisher × 3 | 6 min | Push: 125–135 / Easy: 100–110 bpm | 1 min fast, 1 min easy — repeat 3 times |
+| Cool-down | 3 min | 95–105 bpm | Let breathing settle before continuing |
+
+**Notes:**
+- If struggling to reach 120+ bpm on flat ground: use a slight incline, longer stride, or faster arm swing
+- Garmin Fenix 8 alert fires at 116 bpm — expect it briefly at the start of the main block, then it silences as HR stabilises
+- Polar Verity Sense arm strap is the primary HR source — provides cleaner data during arm-swing walking than wrist HR
+- Do not replace the VO₂ max walk with a treadmill session — GPS signal is required for the Garmin algorithm
 
 ---
 
@@ -38,379 +60,292 @@ This plan builds aerobic base through progressive treadmill and outdoor walking,
 
 ---
 
+## Caliber Workout Definitions (v2.5 — updated 28 June 2026)
+
+> Revised for event specificity, post-gastric-sleeve core rehabilitation, and bilateral hip degeneration / right IT band safety. All exercises 3 × 8–10 reps / 60s rest unless noted.
+
+### Workout 1 — Legs & Abs (Monday)
+
+| Exercise | Sets | Reps | Rest | Notes |
+|----------|------|------|------|-------|
+| Dumbbell Bench Glute Bridge | 3 | 8–10 | 60s | |
+| Sled 45° Leg Press | 3 | 8–10 | 60s | |
+| Dumbbell Step Up | 3 | 8–10 each | 60s | Low box (20–30cm). Drive through heel, not back foot. Unilateral. |
+| Machine Seated Leg Curl | 3 | 8–10 | 60s | |
+| Clamshells | 3 | 12–15 each | 60s | With resistance band above knee. Floor-based, joint-friendly. Glute med focus. |
+| Machine Seated Calf Press | 3 | 10–12 | 60s | |
+| Standing Calf Raise | 3 | 12–15 | 45s | Targets gastrocnemius (vs soleus on seated). |
+| Cable Pallof Press | 3 | 8–10 each | 60s | Anti-rotation. Core braced throughout. |
+| Dead Bug | 3 | 8–10 each | 60s | TVA focus. Slow and controlled. Lumbar neutral. Post-sleeve safe. |
+| Bird-Dog | 3 | 8–10 each | 60s | Hip-to-core integration. No lumbar rotation. |
+| RKC Plank | 3 | 30s | 60s | Squeeze glutes and abs hard. Not a passive hold. |
+
+**Estimated session duration:** 65–70 min (including warm-up)  
+**Hip/knee safety:** Step up replaces split squat (no deep hip flexor stretch). Leg extension removed (open-chain knee shear). Clamshells replace standing cable/machine hip abduction (floor-based, no single-leg hip load).
+
+---
+
+### Workout 2 — Chest & Arms (Friday)
+
+| Exercise | Sets | Reps | Rest | Notes |
+|----------|------|------|------|-------|
+| Dumbbell Bench Press | 3 | 8–10 | 60s | |
+| Dumbbell Incline Bench Press | 3 | 8–10 | 60s | |
+| Dumbbell Floor Fly | 3 | 8–10 | 60s | |
+| Dumbbell Curl | 3 | 8–10 | 60s | |
+| Dumbbell Tricep Extension | 3 | 8–10 | 60s | |
+| Hollow Body Hold | 3 | 30s | 60s | Third core session of the week. No intra-abdominal pressure. Post-sleeve safe. |
+
+---
+
+### Workout 3 — Back & Shoulders (Wednesday)
+
+| Exercise | Sets | Reps | Rest | Notes |
+|----------|------|------|------|-------|
+| Dumbbell Bent-Over Row | 3 | 8–10 | 60s | |
+| Cable Seated Row | 3 | 8–10 | 60s | |
+| Cable Lat Pulldown | 3 | 8–10 | 60s | |
+| Dumbbell Shoulder Press | 3 | 8–10 | 60s | |
+| Dumbbell Lateral Raise | 3 | 8–10 | 60s | |
+| Dumbbell Shrug | 3 | 8–10 | 60s | |
+| Banded Face Pull | 3 | 12–15 | 60s | Band anchored at eye height. Elbows high. External rotation at end range. Rotator cuff / rear delt. |
+| Machine Seated Reverse Fly | 3 | 12–15 | 60s | Rear delt. No lower back stress. |
+
+---
+
 ## 13-Week Progressive Plan
 
-### Phase 1 — Foundation (Weeks 1-4: 1-28 June)
+### Phase 1 — Foundation (Weeks 1–4: 1–28 June)
 
-**Focus:** Establish the 6-day routine, build aerobic base, reintroduce Caliber after surgery recovery.
-
----
-
-#### Week 1 (1-7 June) — Reintroduction
-
-> Caliber resumes this week. Upper body cleared from 1 June. Keep Caliber intensity moderate — 3×8 at comfortable weight, focus on form re-establishment after the surgery break.
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 45 min + walk 40 min | 5,000 walk |
-| Tue | Treadmill walk | 70 min @ 4.6 km/h, 0-2% incline | 8,000 |
-| Wed | Back & Shoulders + walk | Caliber 45 min + walk 40 min | 5,000 walk |
-| Thu | Treadmill walk | 70 min @ 4.6 km/h, 0-2% incline | 8,000 |
-| Fri | Chest & Arms + walk | Caliber 45 min + walk 40 min | 5,000 walk |
-| Sat | Long walk (outdoor) | 90 min, flat route | 10,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~44,000 steps across sessions
+**Focus:** Establish the 6-day routine, build aerobic base, introduce VO₂ max walks, reintroduce Caliber after surgery recovery.
 
 ---
 
-#### Week 2 (8-14 June) — Building
+#### Week 1 (1–7 June) — Reintroduction
 
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 50 min + walk 40 min | 5,000 walk |
-| Tue | Treadmill walk | 75 min @ 4.6-4.8 km/h, 0-3% incline | 8,500 |
-| Wed | Back & Shoulders + walk | Caliber 50 min + walk 40 min | 5,000 walk |
-| Thu | Treadmill walk | 75 min @ 4.6-4.8 km/h, 0-3% incline | 8,500 |
-| Fri | Chest & Arms + walk | Caliber 50 min + walk 40 min | 5,000 walk |
-| Sat | Long walk (outdoor) | 105 min, flat/gentle route | 12,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~49,000 steps across sessions
-
----
-
-#### Week 3 (15-21 June) — Progression
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 55 min + walk 45 min | 5,500 walk |
-| Tue | Treadmill walk | 75 min @ 4.8 km/h, 2-4% incline | 9,000 |
-| Wed | Back & Shoulders + walk | Caliber 55 min + walk 45 min | 5,500 walk |
-| Thu | Treadmill walk | 75 min @ 4.8 km/h, 2-4% incline | 9,000 |
-| Fri | Chest & Arms + walk | Caliber 55 min + walk 45 min | 5,500 walk |
-| Sat | Long walk (outdoor) | 120 min, mixed terrain | 13,500 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~53,500 steps across sessions
-
----
-
-#### Week 4 (22-28 June) — Consolidation / Mini Deload
-
-> Recovery week — reduce walk duration by ~15%, hold Caliber volume steady. Do not skip sessions; just reduce intensity.
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 45 min + walk 35 min | 4,500 walk |
-| Tue | Treadmill walk | 65 min @ 4.6 km/h, 0-2% incline | 7,500 |
-| Wed | Back & Shoulders + walk | Caliber 45 min + walk 35 min | 4,500 walk |
-| Thu | Treadmill walk | 65 min @ 4.6 km/h, 0-2% incline | 7,500 |
-| Fri | Chest & Arms + walk | Caliber 45 min + walk 35 min | 4,500 walk |
-| Sat | Long walk (outdoor) | 90 min, easy flat route | 10,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~38,500 steps across sessions
-
----
-
-### Phase 2 — Build (Weeks 5-8: 29 June - 26 July)
-
-**Focus:** Increase Saturday long walk significantly. Introduce incline on weekday sessions. Caliber weights should be progressing week on week.
-
----
-
-#### Week 5 (29 June - 5 July) — Base Build
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 55 min + walk 45 min | 5,500 walk |
-| Tue | Treadmill walk | 80 min @ 4.8 km/h, 2-4% incline | 9,500 |
-| Wed | Back & Shoulders + walk | Caliber 55 min + walk 45 min | 5,500 walk |
-| Thu | Treadmill walk | 80 min @ 4.8 km/h, 2-4% incline | 9,500 |
-| Fri | Chest & Arms + walk | Caliber 55 min + walk 45 min | 5,500 walk |
-| Sat | Long walk (outdoor) | 150 min, mixed terrain | 16,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~56,500 steps across sessions
-
----
-
-#### Week 6 (6-12 July) — Endurance Push
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Tue | Treadmill walk | 80 min @ 4.8 km/h, 3-5% incline | 9,500 |
-| Wed | Back & Shoulders + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Thu | Treadmill walk | 80 min @ 4.8 km/h, 3-5% incline | 9,500 |
-| Fri | Chest & Arms + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Sat | Long walk (outdoor) | 165 min, mixed terrain with some elevation | 18,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~62,500 steps across sessions
-
----
-
-#### Week 7 (13-19 July) — Peak Build
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Tue | Treadmill walk | 85 min @ 4.8 km/h, 3-6% incline | 10,000 |
-| Wed | Back & Shoulders + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Thu | Treadmill walk | 85 min @ 4.8 km/h, 3-6% incline | 10,000 |
-| Fri | Chest & Arms + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Sat | Long walk (outdoor) | 180 min, mixed terrain | 20,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~66,500 steps across sessions
-
----
-
-#### Week 8 (20-26 July) — Consolidation / Deload
-
-> Second recovery week. Reduce Saturday to 120 min. Hold Caliber volume.
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 50 min + walk 40 min | 5,000 walk |
-| Tue | Treadmill walk | 70 min @ 4.8 km/h, 2-4% incline | 8,000 |
-| Wed | Back & Shoulders + walk | Caliber 50 min + walk 40 min | 5,000 walk |
-| Thu | Treadmill walk | 70 min @ 4.8 km/h, 2-4% incline | 8,000 |
-| Fri | Chest & Arms + walk | Caliber 50 min + walk 40 min | 5,000 walk |
-| Sat | Long walk (outdoor) | 120 min, easy flat route | 13,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~49,000 steps across sessions
-
----
-
-### Phase 3 — Peak (Weeks 9-11: 27 July - 16 August)
-
-**Focus:** Longest sessions of the training block. Saturday walks reach 3.5-4 hours. Week 10 dress rehearsal. Caliber moves to maintenance — hold weights, don't push PRs.
-
----
-
-#### Week 9 (27 July - 2 August) — Peak Volume
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Tue | Treadmill walk | 90 min @ 4.8 km/h, 4-6% incline | 10,500 |
-| Wed | Back & Shoulders + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Thu | Treadmill walk | 90 min @ 4.8 km/h, 4-6% incline | 10,500 |
-| Fri | Chest & Arms + walk | Caliber 60 min + walk 45 min | 5,500 walk |
-| Sat | Long walk (outdoor) | 195 min, varied terrain | 22,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~69,500 steps across sessions
-
----
-
-#### Week 10 (3-9 August) — DRESS REHEARSAL WEEK ⭐
-
-> Most important training week. Saturday is the dress rehearsal — full kit, Tailwind in the EVOC bladder, gels on schedule, 5.11 pack loaded as on event day. Target 25,000+ steps outdoors. Reduce weekday sessions to protect legs for Saturday.
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs + walk | Caliber 55 min + walk 35 min | 4,500 walk |
-| Tue | Treadmill walk | 70 min @ 4.6 km/h, 2-3% incline | 8,000 |
-| Wed | Back & Shoulders + walk | Caliber 55 min + walk 35 min | 4,500 walk |
-| Thu | Treadmill walk | 60 min @ 4.6 km/h, easy | 7,000 |
-| Fri | Chest & Arms + walk | Caliber 50 min + walk 30 min | 4,000 walk |
-| **Sat** | **DRESS REHEARSAL — full kit** | **240 min outdoor** | **25,000+** |
-| Sun | Rest | Complete rest — feet up | <3,000 |
-
-**Dress rehearsal checklist:**
-- EVOC bladder filled with 4 scoops Tailwind
-- SIS GO gels — half gel every 45-60 min
-- 5.11 Rush 12 pack with event-day load
-- Start time: simulate event start (early morning)
-- Log everything: HR, pace, gel timing, any GI issues, foot hotspots
-- Share full report with AI the following morning
-
----
-
-#### Week 11 (10-16 August) — Peak Maintenance
-
-> Legs will be fatigued from dress rehearsal. Monday is light. Do not attempt to push volume this week — absorb the adaptation.
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs LIGHT + walk | Caliber reduced weight + walk 35 min | 4,000 walk |
-| Tue | Treadmill walk | 75 min @ 4.6 km/h, 2-3% incline | 8,500 |
-| Wed | Back & Shoulders + walk | Caliber 55 min + walk 40 min | 5,000 walk |
-| Thu | Treadmill walk | 80 min @ 4.8 km/h, 3-5% incline | 9,000 |
-| Fri | Chest & Arms + walk | Caliber 55 min + walk 40 min | 5,000 walk |
-| Sat | Long walk (outdoor) | 180 min, mixed terrain | 20,000 |
-| Sun | Rest | Gentle stroll only | <5,000 |
-
-**Weekly walk volume:** ~66,500 steps across sessions
-
----
-
-### Phase 4 — Taper (Weeks 12-13: 17-29 August)
-
-**Focus:** Reduce volume progressively while maintaining frequency. Legs stay fresh, aerobic fitness is preserved. Caliber drops to 2 sets per exercise — maintenance only.
-
----
-
-#### Week 12 (17-23 August) — Taper Week 1
-
-> Reduce Saturday to 120 min. Weekday walks drop to 60 min. Caliber: 2 sets per exercise, hold working weight.
-
-| Day | Session | Duration | Steps Target |
-|-----|---------|----------|-------------|
-| Mon | Legs & Abs TAPER + walk | Caliber 2×8 + walk 35 min | 4,000 walk |
-| Tue | Treadmill walk | 60 min @ 4.6 km/h, 1-2% incline | 7,000 |
-| Wed | Back & Shoulders TAPER + walk | Caliber 2×8 + walk 35 min | 4,000 walk |
-| Thu | Treadmill walk | 60 min @ 4.6 km/h, 1-2% incline | 7,000 |
-| Fri | Chest & Arms TAPER + walk | Caliber 2×8 + walk 35 min | 4,000 walk |
-| Sat | Long walk (outdoor) | 120 min, flat familiar route | 13,000 |
-| Sun | Rest | Gentle stroll only | <4,000 |
-
-**Weekly walk volume:** ~43,000 steps across sessions
-
----
-
-#### Week 13 (24-29 August) — EVENT WEEK
-
-> Minimal training. Keep legs moving but never tire them. No Caliber this week — complete rest from strength. Focus on nutrition, sleep, kit preparation.
+> Caliber resumes this week. Upper body cleared from 1 June. **Week 1 runs at 2 working sets per exercise** (not 3) — medically appropriate introduction following lipoma surgery recovery. Full 3×8-10 plan resumes from Week 2 onwards. Focus on form re-establishment after the surgery break.
 
 | Day | Session | Duration | Notes |
 |-----|---------|----------|-------|
-| Mon | Easy walk | 30 min flat | Keep legs moving, nothing more |
-| Tue | Easy walk | 30 min flat | Same |
-| Wed | Easy walk | 20 min flat | Shorter |
-| Thu | Complete rest | — | Feet up, hydrate, sleep early |
-| Fri | Kit prep walk | 15 min | Just to shake legs out |
-| **Sat** | **EVENT DAY** | **100,000 STEPS** | **29 AUGUST 2026** |
-| Sun | Complete rest | — | Recovery begins |
+| Mon | Caliber: Legs & Abs + walk | 45 min gym + 40 min walk | Moderate intensity. Form focus. |
+| Tue | VO₂ max walk + Zone 2 walk | 20 min + 50 min | First outdoor GPS session. HR 118–130 in main block. |
+| Wed | Caliber: Back & Shoulders + walk | 45 min gym + 40 min walk | Upper body only. |
+| Thu | VO₂ max walk + Zone 2 walk | 20 min + 50 min | Second VO₂ max session of the week. |
+| Fri | Caliber: Chest & Arms + walk | 45 min gym + 40 min walk | Upper body. Check surgical clearance on shoulder movements. |
+| Sat | Long walk | 90 min | Flat route. Zone 2 throughout. ~10,000 steps. |
+| Sun | Rest | — | AI-guided recovery check. |
 
-**Event week nutrition:** Hit 1,600 kcal Mon-Wed, increase carbs Thursday (250g), Friday (300g) — sleeve-adapted carb load via liquid carbs and oats. No solid changes to food types — only increase carb volume.
-
----
-
-## AI Adaptive Coaching Rules
-
-The daily brief AI should apply these rules each morning:
-
-### Daily Adaptation (based on previous day's data)
-
-| Recovery Signal | Adaptation |
-|----------------|-----------|
-| HRV at/above baseline + sleep 70+ + body battery 60+ | Train as planned, push upper range |
-| HRV slightly suppressed (5-10% below baseline) | Reduce walk duration 10-15%, hold Caliber as planned |
-| HRV significantly suppressed (>10% below baseline) | Reduce walk by 20%, drop Caliber to 2 sets |
-| HRV critically low + sleep <50 + body battery <40 | Walk only (no Caliber), 30 min easy |
-| Rest day (Sunday) | Recommend steps based on body battery at wake |
-
-### Weekly Strength Adaptation (reviewed each Monday morning)
-
-The AI should review the previous week's Caliber sessions from StrengthSets and apply:
-
-- **All exercises hit 3×10:** Recommend increasing weight by smallest increment next session
-- **Any exercise failed to reach 8 reps on working sets:** Hold weight, focus on rep quality
-- **Weight dropped between sets:** Note as approaching failure — hold weight this week
-- **Exercise missing from session:** Flag and recommend inclusion next session
-- **Volume significantly down vs prior week:** Check if fatigue-related or missed session
-
-### Saturday Long Walk
-
-- If previous day (Friday) Caliber session shows high training load (>60) or HRV suppressed: reduce Saturday by 20%
-- If body battery at wake on Saturday <50: reduce Saturday by 30% regardless of plan
-- Dress rehearsal (Week 10 Saturday) proceeds unless body battery <40 or HRV critically low
+**Saturday target:** ~10,000 steps  
+**Weekly step target:** ~55,000–60,000 (activity steps)
 
 ---
 
-## Fuelling During Training
+#### Week 2 (8–14 June) — Building Rhythm
 
-### Weekday walks (40-90 min)
+| Day | Session | Duration | Notes |
+|-----|---------|----------|-------|
+| Mon | Caliber: Legs & Abs + walk | 45 min gym + 40 min walk | Increase weight slightly if form solid. |
+| Tue | VO₂ max walk + Zone 2 walk | 20 min + 55 min | Aim for consistent 118–125 bpm in main block. |
+| Wed | Caliber: Back & Shoulders + walk | 45 min gym + 40 min walk | |
+| Thu | VO₂ max walk + Zone 2 walk | 20 min + 55 min | |
+| Fri | Caliber: Chest & Arms + walk | 45 min gym + 40 min walk | |
+| Sat | Long walk | 100 min | Introduce mild incline if available. ~11,000 steps. |
+| Sun | Rest | — | |
 
-- Hydration: water only for sessions under 60 min
-- Sessions 60-90 min: 500ml water + half scoop Tailwind (50 kcal)
-- No solid food during sessions
-
-### Saturday long walks (90+ min)
-
-- Tailwind in EVOC bladder from Week 5 onwards (practice event-day fuelling)
-- Half SIS GO gel every 60 min from Week 7 onwards
-- From Week 9: full event-day fuelling protocol
-
-### Caliber sessions
-
-- Pre-session: normal meal 90+ min before
-- During: water only
-- Post-session: protein shake within 30 min (25-30g protein, 250-300ml)
+**Saturday target:** ~11,000 steps
 
 ---
 
-## Key Dates
+#### Week 3 (15–21 June) — Volume Build
+
+| Day | Session | Duration | Notes |
+|-----|---------|----------|-------|
+| Mon | Caliber: Legs & Abs + walk | 45 min gym + 40 min walk | |
+| Tue | VO₂ max walk + Zone 2 walk | 20 min + 60 min | Push finisher intervals harder — target upper end of 125–135 bpm. |
+| Wed | Caliber: Back & Shoulders + walk | 45 min gym + 40 min walk | |
+| Thu | VO₂ max walk + Zone 2 walk | 20 min + 60 min | |
+| Fri | Caliber: Chest & Arms + walk | 45 min gym + 40 min walk | |
+| Sat | Long walk | 110 min | ~12,500 steps. Outdoor where possible for event specificity. |
+| Sun | Rest | — | |
+
+**Saturday target:** ~12,500 steps
+
+---
+
+#### Week 4 (22–28 June) — Recovery Week
+
+> Reduce volume ~20%. Maintain all 6 sessions but shorten walks. Allow adaptation.
+
+| Day | Session | Duration | Notes |
+|-----|---------|----------|-------|
+| Mon | Caliber: Legs & Abs + walk | 45 min gym + 30 min walk | Reduce weights slightly. |
+| Tue | VO₂ max walk + Zone 2 walk | 20 min + 40 min | Full protocol — VO₂ max walk unchanged. |
+| Wed | Caliber: Back & Shoulders + walk | 45 min gym + 30 min walk | |
+| Thu | VO₂ max walk + Zone 2 walk | 20 min + 40 min | |
+| Fri | Caliber: Chest & Arms + walk | 45 min gym + 30 min walk | |
+| Sat | Long walk | 80 min | Easy. ~9,000 steps. |
+| Sun | Rest | — | |
+
+**Saturday target:** ~9,000 steps
+
+---
+
+### Phase 2 — Build (Weeks 5–8: 29 June – 26 July)
+
+**Focus:** Progressive Saturday distance, sustained Zone 2 discipline, Caliber load increasing steadily.
+
+---
+
+#### Week 5 (29 June – 5 July)
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Standard structure (see Phase 1) | — |
+| Sat | Long walk — 120 min | ~14,000 steps |
+| Sun | Rest | — |
+
+---
+
+#### Week 6 (6–12 July)
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Standard structure | — |
+| Sat | Long walk — 135 min | ~16,000 steps |
+| Sun | Rest | — |
+
+---
+
+#### Week 7 (13–19 July)
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Standard structure | — |
+| Sat | Long walk — 150 min | ~17,500 steps |
+| Sun | Rest | — |
+
+> From Week 5 onwards, Saturday walks should be **outdoors wherever possible** — the NordicTrack maxes at 10% incline and 3+ hours on a treadmill is a significant mental load. Outdoor walking is event-specific.
+
+---
+
+#### Week 8 (20–26 July) — Recovery Week
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Reduce walk durations ~20% | — |
+| Sat | Long walk — 110 min | ~13,000 steps |
+| Sun | Rest | — |
+
+> VO₂ max walks continue unchanged on recovery weeks — the protocol is short enough that it doesn't add meaningful load.
+
+---
+
+### Phase 3 — Peak (Weeks 9–11: 27 July – 16 August)
+
+**Focus:** Maximum Saturday volume, full-kit outdoor sessions, dress rehearsal.
+
+---
+
+#### Week 9 (27 July – 2 August)
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Standard structure | — |
+| Sat | Long walk — 180 min | ~21,000 steps |
+| Sun | Rest | — |
+
+---
+
+#### Week 10 (3–9 August) — Dress Rehearsal Week
+
+> **Critical week.** Saturday is a full-kit outdoor dress rehearsal: Tailwind in the hydration bladder, gels on schedule, 5.11 pack loaded, Injinji socks, both pairs of Merrells rotated, zinc oxide tape applied. This is non-negotiable for an event of this length.
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Standard structure | — |
+| Sat | **Full-kit dress rehearsal — 240 min** | ~28,000 steps |
+| Sun | Rest — full recovery | — |
+
+**Dress rehearsal nutrition schedule (Saturday):**
+- 0–30 min: Tailwind only (electrolytes)
+- 30 min: SiS GO Isotonic gel (half portion)
+- 60 min: SiS Beta Fuel gel (half portion) + water chaser
+- 90 min: Tailwind
+- 120 min: SiS GO Isotonic gel (half portion)
+- 150 min: Maurten Gel 100
+- 180 min: Tailwind
+- 210 min: SiS Beta Fuel with caffeine (half portion)
+- 240 min: Finish
+
+> If the dress rehearsal exposes any kit or nutrition issues, Week 11 is the last opportunity to resolve them before taper.
+
+---
+
+#### Week 11 (10–16 August) — Post-Rehearsal Recovery / Final Peak
+
+| Day | Session | Sat Target |
+|-----|---------|-----------|
+| Mon–Fri | Reduce walk durations ~20% | — |
+| Sat | Long walk — 150 min | ~17,500 steps |
+| Sun | Rest | — |
+
+---
+
+### Phase 4 — Taper (Weeks 12–13: 17–29 August)
+
+**Focus:** Protect fitness gains. Reduce volume. Arrive fresh.
+
+---
+
+#### Week 12 (17–23 August) — Taper Week 1
+
+> Drop Saturday to 2 hours. Reduce weekday walk durations by 30%. Caliber continues but at reduced weight (–20%) and volume. VO₂ max walks continue — they maintain the Garmin signal and keep legs turning without adding fatigue.
+
+| Day | Session | Duration |
+|-----|---------|----------|
+| Mon | Caliber: Legs & Abs + walk | 45 min gym + 25 min walk |
+| Tue | VO₂ max walk + Zone 2 walk | 20 min + 30 min |
+| Wed | Caliber: Back & Shoulders + walk | 45 min gym + 25 min walk |
+| Thu | VO₂ max walk + Zone 2 walk | 20 min + 30 min |
+| Fri | Caliber: Chest & Arms + walk | 45 min gym + 25 min walk |
+| Sat | Long walk — 120 min | ~14,000 steps |
+| Sun | Rest | — |
+
+---
+
+#### Week 13 (24–29 August) — Event Week
+
+> No Caliber from Monday. Minimal training. Protect the legs.
+
+| Day | Session | Notes |
+|-----|---------|-------|
+| Mon | Easy 30 min walk | Zone 1 only. No gym. |
+| Tue | VO₂ max walk only (20 min) | Final GPS session for Garmin signal. No additional volume. |
+| Wed | Rest | Off feet. Prep kit. |
+| Thu | 20 min easy walk | Shake legs out. Zone 1. |
+| Fri | Rest | Final kit check. Early bed. Hydrate aggressively. |
+| **Sat 29 Aug** | **100,000 Steps — Peddars Way** | **Event day** |
+
+---
+
+## Key Milestones
 
 | Date | Milestone |
 |------|-----------|
-| 1 June | Plan starts — Caliber resumes |
-| 29 June | Week 5 — Saturday walks reach 150 min |
-| 13 July | Week 7 — Saturday walks reach 180 min / 20,000 steps |
-| 3-9 August | Week 10 — DRESS REHEARSAL |
-| 17 August | Taper begins |
-| 24 August | Event week — no Caliber, minimal training |
-| 29 August | 100,000 STEPS CHALLENGE |
+| 1 June 2026 | Caliber resumes, 13-week plan starts, VO₂ max walks begin |
+| 29 June 2026 | Week 5 — Saturday walks reach 120 min |
+| 3–9 August 2026 | Week 10 — Full-kit dress rehearsal (240 min) |
+| 17 August 2026 | Taper begins — volume reduction |
+| 24 August 2026 | Event week — no Caliber, minimal training |
+| **29 August 2026** | **100,000 Steps Challenge — Peddars Way** |
 
 ---
 
-## Updating the Stack for This Plan
+## Reminders — Complete Before August
 
-When this plan replaces the previous treadmill-only plan:
-
-1. **Update `system_prompt.txt`** — change Caliber workout order to Mon=Legs/Abs, Wed=Back/Shoulders, Fri=Chest/Arms
-2. **Update Garmin workout templates** in Garmin Connect to match new order
-3. **Update `TREADMILL_TRAINING_GUIDE.md`** — or replace with this document as the reference plan
-4. **Update `daily_brief.py`** — the treadmill session lookup needs to reflect the new 6-day structure
-5. **Plan start date:** 1 June 2026 (auto-calculated week number continues from this date)
-
----
-
-## Hip Mobility Protocol
-
-After every session of 60+ minutes, perform 10 minutes of hip mobility work. This becomes critical from Week 5 when Saturday walks exceed 150 minutes. Hip flexor tightness is the primary cause of gait breakdown in ultra-endurance walking — once your form degrades, injury risk and calorie expenditure both spike.
-
-**Post-session routine (10 min):**
-
-1. **Hip flexor stretch** — kneeling lunge, back knee on floor, drive hips forward. Hold 45 seconds each side. Repeat twice.
-2. **Pigeon pose** — seated figure-4 stretch. Hold 60 seconds each side.
-3. **90/90 stretch** — sit with both knees at 90 degrees, rotate torso toward front leg. Hold 45 seconds each side.
-4. **Glute bridge** — 2 sets of 15 slow reps (bodyweight only on non-Caliber days). Activates glutes and reduces hip flexor dominance.
-5. **Standing hip circles** — 10 circles each direction, each leg. Loosens the joint capsule.
-
-**When to add more:** If you wake with hip tightness after a Saturday long walk, add 5 minutes of the same routine before getting out of bed. This is a warning sign — do not ignore it.
-
-**From Week 7 onwards:** Do the hip mobility routine the morning after every Saturday walk, not just post-session.
-
----
-
-## Footwear
-
-You already own two pairs of Merrell Morphlite — no purchase needed. ✅
-
-### Rotation strategy
-
-Alternate between the two pairs on training days from Week 5 onwards when Saturday walks get long:
-
-- **Primary pair** (most worn in) — Tuesday and Thursday weekday walks
-- **Second pair** — Saturday long walks, so it accumulates event-relevant hours on the sessions that matter most
-
-### Event day shoe strategy
-
-- Start the event in whichever pair feels most comfortable and broken in on the day
-- Pack the second pair in a drop bag at the ~50K mark if logistics allow
-- Changing shoes at 50K into a fresh pair is one of the most effective strategies for managing foot comfort in the second half — even the same model feels noticeably fresher
-
-### Foot care reminders
-
-- Keep toenails trimmed short throughout the training block — black toenails from long walks are painful and slow to resolve
-- Apply Body Glide or Squirrel's Nut Butter to known hotspot areas before every Saturday session from Week 5
-- Test your sock choice on long walks — double-layer socks (Drymax or Balega Blister Resist) are worth trying if you get hotspots
-- If a hotspot develops during the event at 30K and you ignore it, you may not finish
-
+- 📋 Map 5–6 crew-accessible road stops along Peddars Way with what3words references for support crew
+- 📋 Event day dashboard (Grafana) — build by early August
+- 📋 Pre-event AI brief — special brief for 28 August with pacing/gel strategy
+- 📋 HRV baseline recalibration — after 4 weeks of training data (late June)
+- 📋 Post-event recovery plan — build in August
+- 📋 Confirm both pairs of Merrell Morphlite GTX broken in before dress rehearsal
