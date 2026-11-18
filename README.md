@@ -22,7 +22,7 @@ Remote (iPhone/iPad)
                   └── open-webui :3001    ← chat UI → Max LM Studio
                                                   │
                                           Max (on demand)
-                                          └── Ollama
+                                          └── Ollama :11434
                                               └── Qwen3.8-27B
 ```
 
@@ -70,8 +70,8 @@ python garmin_auth.py
 
 ### 5. Set up LM Studio on Max
 
-- Download and install LM Studio from `https://lmstudio.ai`
-- Download `qwen/qwen3.6-27b` (Q6_K quantisation)
+- Download and install Ollama from `https://ollama.com/`
+- Download `qwen/qwen3.8-27b` (Q6_K quantisation)
 - Disable thinking mode (see Guide 04)
 - Create a `Fitness-Coach` preset and paste `docs/system_prompt.txt` as the system prompt
 - Start the API server on port 1234
@@ -106,16 +106,16 @@ python garmin_auth.py
 | [01-nas-docker-stack.md](docs/01-nas-docker-stack.md) | InfluxDB + Grafana setup on QNAP |
 | [02-garmin-sync.md](docs/02-garmin-sync.md) | garmin-direct-sync container + workout plan name mapping |
 | [03-cronometer-sync.md](docs/03-cronometer-sync.md) | Cronometer nutrition pipeline |
-| [04-lmstudio-qwen.md](docs/04-lmstudio-qwen.md) | LM Studio + Qwen3.6-27B + thinking mode |
+| [04-ollama-qwen.md](docs/04-ollama-qwen.md) | Ollama + Qwen3.8-27B + thinking mode |
 | [05-ai-fitness-assistant.md](docs/05-ai-fitness-assistant.md) | System prompt + manual coaching queries |
 | [06-100k-steps-challenge.md](docs/06-100k-steps-challenge.md) | Event preparation guide |
-| [07-daily-brief-guide.md](docs/07-daily-brief-guide.md) | Daily + weekly coaching email setup |
+| [07-coaching-emails-guide.md](docs/07-coaching-emails-guide.md) | Daily + weekly coaching email setup |
 | [08-gap-analysis.md](docs/08-gap-analysis.md) | Known gaps + enhancement roadmap |
 | [09-open-webui-remote-access.md](docs/09-open-webui-remote-access.md) | Open WebUI + Tailscale remote access |
 | [Caliber_MCP_Integration_Guide.md](docs/Caliber_MCP_Integration_Guide.md) | Caliber MCP integration (optional) |
 | [TRAINING_PLAN_V2.md](docs/TRAINING_PLAN_V2.md) | 13-week training plan with hip mobility + footwear |
 | [garmin_notes_templates.txt](docs/garmin_notes_templates.txt) | Exercise name templates for Garmin Connect |
-| [system_prompt.txt](docs/system_prompt.txt) | AI coaching system prompt for LM Studio |
+| [system_prompt.txt](docs/system_prompt.txt) | AI coaching system prompt for Ollama |
 
 **Reading order for setup:** 01 → 02 → 03 → 04 → 07 → 05 → 06 → TRAINING_PLAN_V2
 
@@ -171,10 +171,10 @@ fitness-stack/
 │   ├── 01-nas-docker-stack.md
 │   ├── 02-garmin-sync.md
 │   ├── 03-cronometer-sync.md
-│   ├── 04-lmstudio-qwen.md
+│   ├── 04-ollama-qwen.md
 │   ├── 05-ai-fitness-assistant.md
 │   ├── 06-100k-steps-challenge.md
-│   ├── 07-daily-brief-guide.md
+│   ├── 07-coaching-emails-guide.md
 │   ├── 08-gap-analysis.md
 │   ├── 09-open-webui-remote-access.md
 │   ├── Caliber_MCP_Integration_Guide.md
