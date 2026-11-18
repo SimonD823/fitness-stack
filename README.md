@@ -22,8 +22,8 @@ Remote (iPhone/iPad)
                   └── open-webui :3001    ← chat UI → Max LM Studio
                                                   │
                                           Max (on demand)
-                                          └── LM Studio :1234
-                                              └── Qwen3.6-27B
+                                          └── Ollama
+                                              └── Qwen3.8-27B
 ```
 
 ---
