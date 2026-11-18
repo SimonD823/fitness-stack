@@ -19,7 +19,7 @@ Remote (iPhone/iPad)
                   ├── garmin-direct-sync  ← Garmin Connect → InfluxDB (every 30 min)
                   ├── cronometer-sync     ← nutrition → InfluxDB (06:00 AM daily)
                   ├── daily-brief         ← AI coaching emails (06:45 AM daily and weekly Monday 2AM)
-                  └── open-webui :3001    ← chat UI → Max LM Studio
+                  └── open-webui :3001    ← chat UI → Max Ollama
                                                   │
                                           Max (on demand)
                                           └── Ollama :11434
