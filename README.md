@@ -1,6 +1,6 @@
 # Local AI Fitness Stack
 
-A fully self-hosted fitness intelligence platform combining Garmin wearable data, strength training tracking, nutrition monitoring, a local LLM, and automated daily coaching emails — all running on your own hardware with no cloud dependency after setup.
+A fully self-hosted fitness intelligence platform combining Garmin wearable data, strength training tracking, nutrition monitoring, a local LLM, and automated daily coaching emails — all running on your own hardware with no cloud AI dependency after setup.
 
 **Primary goal:** 100,000 Steps Challenge — Saturday 29 August 2026 (~70–80 km).
 
